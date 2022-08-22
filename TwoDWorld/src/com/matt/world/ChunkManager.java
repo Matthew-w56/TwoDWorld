@@ -39,7 +39,7 @@ public class ChunkManager {
 	Rectangle[] off = new Rectangle[] {new Rectangle(-1, 0, 1, O.screenHeight),
 		    new Rectangle(O.screenWidth, 0, 1, O.screenHeight)};
 
-	
+
 	public ChunkManager() {}
 	
 	public void move(int dx, int dy) {
@@ -77,6 +77,13 @@ public class ChunkManager {
 		}
 	}
 	
+	/**
+	 * Attempt to move in the X direction, adjust actual movement
+	 * for factors such as object collision, and return the maximum
+	 * amount that the given movement can be completed
+	 * @param dx Desired change in X
+	 * @return Integer: Real Movement Vector
+	 */
 	public int tryX(int dx) {
 		//Set up a testRect at the same position as the player, but not refering to the player
 		Rectangle testRect = new Rectangle(O.player.rect);
