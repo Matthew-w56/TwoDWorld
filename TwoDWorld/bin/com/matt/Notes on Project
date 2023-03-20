@@ -1,0 +1,31 @@
+So this is a project that has had a lot of versions and a lot of ideas.  But, I'm going to move onto other projects because
+this has a lot of mistakes in it's structure and execution that would require a full remake to undo, and I don't have much
+motivation to do that right now.  But here are a few of the things to work on, when you feel like it:
+
+1) World System
+  So the entire world/movement system is messed up.  When the player moves, it actually moves the literal position of every
+  chunk, and every block.  This is a huge waste of effort and time, so the new way would be to have the world exist completely
+  outside of the display screen, and completely outside of the mouse position.  Then, there would be a class/structure to mediate
+  with the player by deciding which area of this stationary world to display, and where to register the mouse clicks and such.
+  This would require both a remake of the World and Chunk systems, but also the Screen, and display, as well as all the
+  event listeners and coordination with them
+
+2) Block/Item System
+  With these, I have gone through many ideas of how to best organize, refer to, and use items and blocks. I've thought of having
+  a master registry, referred to by the other classes.  I've thought of having a seperate instance of a class for each block.
+  I've thought of having blockMaterial types, that each generic block acts by the rules set forth in it's type.  I've also
+  debated whether a single item had to be it's own variable/instance, a reference to a static enum, or even just an ID with
+  rules of behavior.  The last might be the most effective, though I haven't gone through and made something like that work yet.
+
+3) Threads
+  In each version of the project, it has had some random jumble of where certain systems are updated regularly (such as displaying
+  the world or moving the player).  And I'm still not sure the best way to sort them out into threads, or if there needs to be
+  multiple threads in the first place.
+
+4) Menu screens
+  There just HAS to be a better way to have menus and interactables than what I created in this project.  they were simply meant
+  to be interactable and get you where you need to go.  But if you are revamping this project to take it any further, please
+  find a better way to impliment menus into the game.
+  
+Have fun!
+-Matthew Williams Feb 3rd, 2021

@@ -10,8 +10,6 @@ import com.matt.block.Block;
 import com.matt.creation.CreationWindow;
 import com.matt.item.Item;
 import com.matt.menu.Menu;
-import com.matt.world.ChunkManager;
-import com.matt.world.World;
 import com.matt.world.WorldGenerator;
 
 /**
@@ -23,6 +21,9 @@ import com.matt.world.WorldGenerator;
  */
 public class O {
 	//TEST VARIABLES
+	
+	public static int blockSetPos = 0;
+	public static int blockSetRect = 0;
 	
 	public static boolean mouseLeftDown = false;
 	public static boolean mouseRightDown = false;
@@ -42,7 +43,7 @@ public class O {
 	public static final int chunkRatio = 5;													//Ratio of width to height in chunks (1:chunkRatio)
 	public static final int chunkWidth = blockSize * chunkSize;								//Chunk Size(In Pixels)
 	public static final int chunkHeight = blockSize * chunkSize * chunkRatio;				//Same thing as width, but longer for the height
-	public static int FPS = 15;																//General speed that the game runs at, larger numbers run the game slower
+	//public static int FPS = 15;															//General speed that the game runs at, larger numbers run the game slower
 	
 	public static final int screenWidth = (int)monitorSize.getWidth() - 200;				//Screen Width
 	public static final int screenHeight = (int)monitorSize.getHeight() - 200;				//Screen Height
@@ -181,11 +182,11 @@ public class O {
 	//Alpha values go from 0 (not visible) to 255 (Fully Visible)
 	
 	
-	public static Player player = new Player();								//Player Class          ______________________
-	public static ChunkManager chunkManager = new ChunkManager();			//Manager Class			**Classes and Colors**
-	public static World world = new World();								//World Class
-	public static Mouse mouse = new Mouse();								//Mouse Class
+	//public static Player player = new Player();								//Player Class          ______________________
+	//public static ChunkManager chunkManager = new ChunkManager();			//Manager Class			**Classes and Colors**
+	//public static World world = new World();								//World Class
 	public static WorldGenerator worldGenerator = new WorldGenerator();		//World Generator Class
+	//public static Mouse mouse = new Mouse();								//Mouse Class
 	public static Menu menu = new Menu();									//Menu Class
 	public static FileSpider fileSpider = new FileSpider();					//File Spider Class
 	
@@ -210,6 +211,7 @@ public class O {
 			@SuppressWarnings("rawtypes" )
 			Class blockClass = Class.forName(name);
 			try {
+				@SuppressWarnings("deprecation")
 				Block block = (Block) blockClass.newInstance();
 				return block;
 			} catch (InstantiationException | IllegalAccessException e) {
@@ -305,17 +307,17 @@ public class O {
 			end = end + "I";
 		}
 		return end
-	            .replace("IIIII", "V")
-	            .replace("IIII", "IV")
-	            .replace("VV", "X")
-	            .replace("VIV", "IX")
-	            .replace("XXXXX", "L")
-	            .replace("XXXX", "XL")
-	            .replace("LL", "C")
-	            .replace("LXL", "XC")
-	            .replace("CCCCC", "D")
-	            .replace("CCCC", "CD")
-	            .replace("DD", "M")
-	            .replace("DCD", "CM");
+	            .replaceAll("IIIII", "V")
+	            .replaceAll("IIII", "IV")
+	            .replaceAll("VV", "X")
+	            .replaceAll("VIV", "IX")
+	            .replaceAll("XXXXX", "L")
+	            .replaceAll("XXXX", "XL")
+	            .replaceAll("LL", "C")
+	            .replaceAll("LXL", "XC")
+	            .replaceAll("CCCCC", "D")
+	            .replaceAll("CCCC", "CD")
+	            .replaceAll("DD", "M")
+	            .replaceAll("DCD", "CM");
 	}
 }

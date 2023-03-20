@@ -32,58 +32,6 @@ public class Slot {
 		return this.item == null ? -1 : this.item.getId();
 	}
 	
-	public void swapWithMouse() {
-		Item midItem = O.mouse.item;
-		int midCount = O.mouse.count;
-		
-		O.mouse.item = this.item;
-		O.mouse.count = this.count;
-		
-		this.setItem(midItem);
-		this.setCount(midCount);
-	}
-	
-	public void takeOneFromMouse() {
-		if (this.count < O.maxStackSize) {
-			O.mouse.count --;
-			this.item = O.mouse.item;
-			this.count ++;
-			if (O.mouse.count <= 0) {
-				O.mouse.count = 0;
-				O.mouse.item = null;
-			}
-		} else {
-			System.out.println("Caught on layer 2");
-		}
-	}
-	
-	public void takeAllFromMouse() {
-		//Assumes that the mouse has an item, and that it is the same as the slot's item
-		this.count += O.mouse.count;
-		if (this.count > O.maxStackSize) {
-			int left = this.count - O.maxStackSize;
-			this.count -= left;
-			O.mouse.count = left;
-		} else {
-			O.mouse.count = 0;
-			O.mouse.item = null;
-		}
-	}
-	
-	public void giveHalfToMouse() {
-		if (O.mouse.item == null && this.count > 0) {
-			int transfer = this.count / 2;
-			if (transfer > 0) {
-				O.mouse.count = transfer;
-				O.mouse.item = this.item;
-				this.count -= transfer;
-				if (this.count == 0) {
-					this.item = null;
-				}
-			}
-		}
-	}
-	
 	public void incItem() {
 		if (this.item != null) {
 			this.count++;
@@ -100,6 +48,7 @@ public class Slot {
 		this.count--;
 		if (this.count <= 0) {
 			this.item = null;
+			this.count = 0;
 		}
 	}
 	
@@ -107,6 +56,7 @@ public class Slot {
 		this.count -= count;
 		if (this.count <= 0) {
 			this.item = null;
+			this.count = 0;
 		}
 	}
 	

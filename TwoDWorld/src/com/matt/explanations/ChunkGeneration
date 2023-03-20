@@ -1,0 +1,57 @@
+Chunk Generation
+
+-----[How it is used]-----
+The WorldGenerator class is used as a method that, when used with a class and a side (1),
+Builds the chunk as if it is the only one there, which is only used to create the first
+chunk in the World.
+After that, the WorldGenerator class is used with the chunk being created, a side, and the
+previous chunk.  For example, if you were generating a chunk to the left of anything that is
+built so far, you would pass in the blank chunk, the side of 0 (for left; right is 2), and
+the current leftmost chunk in the World for the new chunk to be built off of.
+
+
+-----[Chunks and their Parts]-----
+Each chunk has 3 parts:
+-A list of things it wants added to the chunk to the left of it
+-The blocks inside it's boundries
+-A list of things it wants added to the chunk to the right of it
+
+Along with these three big things, each chunk has a treeOffset variable, which tells the chunks
+next to it not to generate a tree for that long into the chunk.  This is so that trees are not
+generated next to each other between chunks.
+
+
+-----[Generation Proccess]-----
+As the chunk gets generated, it goes through three steps:
+
+Step 1
+-Generate the basic terrain:
+	As this happens, the world is generated simply as two parts, sky and ground
+	Then, rocks are formed at first randomly, but as the generator gets deeper,
+	Rocks become more and more common until they have a 100% chance of being
+	Generated.
+
+Step 2
+-Generate the Trees:
+	In this step, the generator looks at the previous chunk's treeOffset variable,
+	and loops through each column in the chunk deciding to make a tree or not.  If
+	the previous chunk's treeOffset variable is not 0, it either moves the start 
+	position over to accomodate(right), or moves the end position in to accomodate(left) 
+	so that no trees can be generated too close to the previous chunk's tree.
+	
+	During this, if any part of a tree hangs over the edge of the chunk, then instead
+	of setting the blocks needed, since it is out of the chunk's boundries, the chunk will 
+	"request the block" to the side needed.  As the chunks get generated, they are checked 
+	for requests to them and change as needed, so if a block gets reqLeft'ed or reqRight'ed,
+	it is changed. (step 3)
+
+Step 3
+-Check for requests:
+	As said in the Generate the Trees section above, in this step they check the previous chunk's
+	req(side) lists and if the list isn't empty, go through each item; which will be a 3 piece
+	list consisting of a row, column, and block id to be set; and sets the corresponding block at
+	the corresponding row and column in the chunk.
+
+
+-----[Location]-----
+world.WorldGenerator, ChunkManager, World.create classes and methods

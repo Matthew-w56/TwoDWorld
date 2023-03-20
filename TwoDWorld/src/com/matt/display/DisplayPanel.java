@@ -1,101 +1,41 @@
-package com.matt;
+package com.matt.display;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
-import com.matt.item.Items;
-import com.matt.menu.Screens;
+import com.matt.Mouse;
+import com.matt.O;
+import com.matt.world.WorldManager;
 
 /**
  * Represents the screen that the game is being displayed in.
  * 
+ * Concerns of this class:
+ * 
+ *   Taking info from the world
+ *   displaying that info
+ *   adding any other lines, details, menus, and such that need to be dealt with.
+ * 
  * @author Matthew Williams
  *
  */
-public class MyPanel  extends JPanel implements KeyListener {
+public class DisplayPanel  extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	protected WorldManager world_manager;
+	protected Mouse mouse;
 	
-	public MyPanel() {super();}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		//Respond to key press
+	public DisplayPanel(WorldManager world, Mouse mouse) {
+		super();
+		this.world_manager = world;
+		this.mouse = mouse;
 		
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_ESCAPE:
-			if (O.player.fullInv) {		//If you are in the inventory
-				O.player.toggleInv();		//Exit the inventory
-			} else if (!(O.player.fullInv || O.menu.inMenu)) {	//Else, If you are not in the inventory or menu
-				O.menu.show(Screens.inGameMenu);//Show the menu
-			} else if (O.menu.inMenu) {		//Else, If you are in the menu
-				O.menu.hide(); 					//Hide the menu
-			}
-			break;
-		
-		case KeyEvent.VK_G:
-			//Toggle the chunk lines
-			O.chunkLines = !O.chunkLines;
-			O.player.give(Items.stonePickaxe.getNew(), 1);
-			break;
-			
-		case KeyEvent.VK_B:
-			//Toggle the block grid lines
-			O.gridLines = !O.gridLines;
-			break;
-			
-		case KeyEvent.VK_E:
-			//Toggle the inventory
-			if (!O.menu.inMenu) {
-				O.player.toggleInv();
-			}
-			break;
-		
-		case KeyEvent.VK_P:
-			//Color change to test item/block object disjoint
-			O.player.inventory.getSelectedItem().setColor(Color.black);
-		
-		case KeyEvent.VK_V:
-			//Toggle the entity lines
-			O.entityOutlines = !O.entityOutlines;
-			break;
-		
-		case KeyEvent.VK_C:
-			//Open the creation window
-			if (!O.menu.inMenu) {
-				O.creationWindow.toggle();
-			}
-			break;
-		
-		case KeyEvent.VK_T:
-			//Toggles all togglers at once
-			O.displayCircle = !O.displayCircle;
-			O.entityOutlines = !O.entityOutlines;
-			O.gridLines = !O.gridLines;
-			O.chunkLines = !O.chunkLines;
-			break;
-		
-		default:
-			//Otherwise, pass the key to the player
-			O.player.listen(e.getKeyCode(), true);
-			break;
-		}
 	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		//Set a key as false
-		O.player.listen(e.getKeyCode(), false);
-	}
-
-	@Override public void keyTyped(KeyEvent e) {}
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -104,13 +44,11 @@ public class MyPanel  extends JPanel implements KeyListener {
 		g.fillRect(0, 0, O.screenWidth, O.screenHeight);
 		
 		//Draw Chunk Manager
-		O.chunkManager.display(g);
-		
-		//Update the mouse
-		O.mouse.update();
+		world_manager.display(g);
+		displayMouseItem(g, O.MX, O.MY);
 		
 		//If needed, draw the mouse box and outline the block the mouse is touching
-		if (O.displayBox && !O.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
+		if (O.displayBox && !world_manager.getPlayer().fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
 			int mouseX = O.MX + O.mouseOffsetX;
 			int mouseY = O.MY + O.mouseOffsetY;
 			g.setColor(Color.black);
@@ -119,16 +57,7 @@ public class MyPanel  extends JPanel implements KeyListener {
 			g.drawRect(mouseX - 1, mouseY - 1, 2, 2);
 		}
 		
-		//Draw Entities
-		for (int i = 0; i < O.world.middleEntities.size(); i++) {
-			try {
-				O.world.middleEntities.get(i).display(g);
-			} catch (IndexOutOfBoundsException e) {}
-			
-		}
 		
-		//Draw the player
-		O.player.display(g);
 		
 		//Draw the circle around player showing the place distance
 		if (O.displayCircle) {
@@ -190,5 +119,25 @@ public class MyPanel  extends JPanel implements KeyListener {
     	g.drawRect(x - 15, y, width + 30, height + 30);
     	
     	g.drawString(text, x, y + 35);
+	}
+	
+	//From the old mouse.java class (back when it did way too much)
+	public void displayMouseItem(Graphics g, int X, int Y) {
+		//If the mouse has an item, and the player is in the inventory
+		if (mouse.getItem() != null && world_manager.getPlayer().fullInv) {
+			g.setFont(O.fontSmall);
+			//Set the color accordingly
+			g.setColor(mouse.getItem().getColor());
+			//Draw the item block
+			g.fillRect(X-O.backItemSize / 2, Y-O.backItemSize, (2 * O.backItemSize) / 3, (2 * O.backItemSize) / 3);
+			//Draw the black border for the item
+			g.setColor(Color.black);
+			g.drawRect(X-O.backItemSize / 2, Y-O.backItemSize, (2 * O.backItemSize) / 3, (2 * O.backItemSize) / 3);
+			if (mouse.getCount() < 10) {
+				g.drawString("" + mouse.getCount(), X, (Y-O.backItemSize/2));
+			} else {
+				g.drawString("" + mouse.getCount(), X - 6, (Y-O.backItemSize/2));
+			}
+		}
 	}
 }

@@ -1,0 +1,34 @@
+Inventory and Item Systems
+
+
+-----[Set Up]-----
+The Inventory System is as follows:
+There are two sets of Inventory/Inventory slots
+-Hotbar         (Always visible)
+-Back Inventory (Visible upon activation with E)
+
+Inventory Class holds [O.hotcount] slots in the hotbar, and [O.backRows] X [O.backCols] slots in the back inventory
+
+
+-----[General]-----
+If the Back Inventory is activated, the mouse can grab items out of the hotbar to hold and place elsewhere, and items can be placed in the hotbar
+If the mouse still has an item with it when the full inventory is deactivated, the item is taken from the mouse and given to the player as if
+  the item is collected in any other way
+
+
+-----[Hotbar]-----
+The Hotbar is always visible in the bottom of the screen, and is a bundle of a certain amount of InventorySlot class instances.
+Each Slot holds an item (null or not), a count (the number of that item being held), and a rectangle for collision with the mouse (referred to as rect)
+Each slot will display itself, and then any item it has in it, if it has any
+
+
+-----[Back Inventory]-----
+The Back Inventory is only visible when it is activated, which freezes the player's movement, and shows a grid of InventoryBackslots.
+The Back Inventory is a 2d Array of InventoryBackslots, which each have a rect, item, and count much like the Hotbar slots.
+The main difference between backslots and hotbar slots are their visibility times, and backslots are a bit smaller to be able to
+  fit in the tight area, and they display the item correspondingly smaller to account for the size difference.
+
+
+-----[Location]-----
+All of the sub-packages and classes of the item package, including Inventory,
+InventorySlot, and items list

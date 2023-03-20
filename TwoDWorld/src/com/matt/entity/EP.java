@@ -7,6 +7,8 @@ import com.matt.O;
  * to allow for easy debugging and tuning. Can later be
  * moved to their respective classes for cleanliness.
  * 
+ * I'm pretty sure EP stands for Entity_Panel
+ * 
  * @author Matthew Williams
  *
  */

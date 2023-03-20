@@ -1,0 +1,27 @@
+Entity Classification
+
+----------[Visual Class Tree]----------
+
+	    ------[Active]
+	   /
+[Entity]------[Intelligent]
+	   \
+        ------[Passive]
+
+
+----------[Short Descriptions]----------
+Alphabetically Sorted
+
+Active:				An Entity that will hurt the player
+Entity: 			Anything that moves around
+Intelligent:		An Entity that has an opinion of the player, and can interact with the player
+Interactable:		An Entity that can be influenced by the player
+Non-Interactable:	An Entity that cannot be influenced by the player
+Passive:			An Entity that will not hurt the player
+
+
+----------[Currently Not Created]----------
+
+-Active
+-Intelligent
+-Interactable

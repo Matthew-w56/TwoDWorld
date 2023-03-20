@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.matt.O;
 import com.matt.block.Block;
+import com.matt.block.BlockMolds;
 import com.matt.entity.Entity;
 
 /**
@@ -41,7 +42,7 @@ public class Chunk {
 		this.endPosL = O.midline;
 		this.endPosR = O.midline;
 		this.fill();
-		if (s == 1) {s++;}
+		if (s == 1) s++;
 		this.create(s, ch);
 	}
 	
@@ -52,8 +53,7 @@ public class Chunk {
 	public void fill() {
 		for (int r = 0; r < O.chunkSize * O.chunkRatio; r++) {
 			for (int c = 0; c < O.chunkSize; c++) {
-				this.blocks[r][c] = new Block();
-				this.blocks[r][c].setRect(new Rectangle(this.rect.x + (c * O.blockSize), this.rect.y + (r * O.blockSize), O.blockSize, O.blockSize));
+				this.blocks[r][c] = new Block(BlockMolds.air, new Rectangle(this.rect.x + (c * O.blockSize), this.rect.y + (r * O.blockSize), O.blockSize, O.blockSize));
 			}
 		}
 	}
@@ -84,18 +84,6 @@ public class Chunk {
 		return this.topPos[c];
 	}
 	
-	public void updateBlocks() {
-		//System.out.println("[Chunk.updateBlocks] Updating Blocks");
-		//For every block in the chunk, update their position
-		for (int r = 0; r < O.chunkSize * O.chunkRatio; r++) {
-			for (int c = 0; c < O.chunkSize; c++) {
-				if (blocks[r][c] != null) {
-					blocks[r][c].setPos(rect.x + (c * O.blockSize), rect.y + (r * O.blockSize));
-				}
-			}
-		}
-	}
-	
 	public void addPos(int r, int c) {
 		//Add a block to a list of blocks that make up the top layer of ground
 		this.topPos[c] = r;
@@ -105,16 +93,13 @@ public class Chunk {
 		return this.topPos;
 	}
 	
-	public void addEntity(Entity e) {
-		this.entities.add(e);
+	public void initBlocks() {
+		//TODO: Where is this for?
+		return;
 	}
 	
-	public void flushEntities() {
-		int length = this.entities.size();
-		for (int x = 0; x < length; x++) {
-			this.entities.get(0).push_to_middle();
-			this.entities.remove(0);
-		}
+	public void addEntity(Entity e) {
+		this.entities.add(e);
 	}
 	
 	public void setDone(boolean b) {

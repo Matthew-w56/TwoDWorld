@@ -25,6 +25,7 @@ public class Inventory {
 	public InventoryBackslot[][] backInv;
 	
 	public Inventory() {
+		//TODO: I hate this being here.
 		O.setupScreenSize();
 		this.rect = new Rectangle((O.screenWidth - O.invWidth) / 2, O.screenHeight - O.invMarginBottom - O.invHeight, O.invWidth, O.invHeight);
 		this.fullRect = new Rectangle((O.screenWidth - O.backInvWidth) / 2, rect.y - O.backInvHeight, O.backInvWidth, O.backInvHeight);
@@ -32,9 +33,10 @@ public class Inventory {
 		this.backInv = new InventoryBackslot[O.backRows][O.backCols];
 		this.full = false;
 		
+		//TODO: A) This loop makes me sad just looking at it.  B) Make sure that counter is the right n value, and not n+1
 		int counter = 0;
 		for (int i = rect.x + O.margin; counter < O.hotCount; i += (O.slotSize + (O.margin * 2))) {
-			this.hotbar[counter] = new InventorySlot(null, 0, i, rect.y + O.margin);
+			this.hotbar[counter] = new InventorySlot(null, 0, i, rect.y + O.margin, counter);
 			counter ++;
 		}
 		for (int r = 0; r < O.backRows; r++) {
@@ -45,16 +47,16 @@ public class Inventory {
 		
 	}
 	
-	public void display(Graphics g) {
+	public void display(Graphics g, int selectedSlot, boolean fullInv) {
 		g.setColor(O.invColor);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 		
 		g.setColor(Color.black);
 		g.drawRect(rect.x, rect.y, rect.width, rect.height);
-		g.fillOval(rect.x + O.margin + (O.player.selected * (O.slotSize + (2 * O.margin))) - 4, rect.y + O.margin - 4, O.slotSize + 8, O.slotSize + 8);
+		g.fillOval(rect.x + O.margin + (selectedSlot * (O.slotSize + (2 * O.margin))) - 4, rect.y + O.margin - 4, O.slotSize + 8, O.slotSize + 8);
 		
 		g.setColor(O.selectedColor);
-		g.fillOval(rect.x + O.margin + (O.player.selected * (O.slotSize + (2 * O.margin))) - 3, rect.y + O.margin - 3, O.slotSize + 6, O.slotSize + 6);
+		g.fillOval(rect.x + O.margin + (selectedSlot * (O.slotSize + (2 * O.margin))) - 3, rect.y + O.margin - 3, O.slotSize + 6, O.slotSize + 6);
 		
 		g.setColor(Color.lightGray);
 		g.drawLine(rect.x + 2, rect.y + 2, rect.x - 2 + rect.width, rect.y + 2);
@@ -88,9 +90,8 @@ public class Inventory {
 		}
 		g.setColor(O.invBubbleColor);
 		for (InventorySlot slot: hotbar) {
-			slot.display(g);
+			slot.display(g, selectedSlot, fullInv);
 		}
-		O.mouse.displayItem(g, O.MX, O.MY);
 	}
 	
 	public boolean add(Item item) {
@@ -225,16 +226,14 @@ public class Inventory {
 			}
 			if (count >= req) {
 				return true;
-			} else if (O.mouse.item != null && O.mouse.item.getId() == id && O.mouse.count + count >= req) {
-				return true;
 			}
 		}
 		return false;
 	}
 	
-	public Item getSelectedItem() {
+	public Item getSelectedItem(int selected) {
 		//Return the selected item
 		//This will return null if the slot is empty
-		return hotbar[O.player.selected].getItem();
+		return hotbar[selected].getItem();
 	}
 }

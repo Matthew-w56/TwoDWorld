@@ -5,30 +5,35 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-import com.matt.block.Block;
-import com.matt.block.Blocks;
 import com.matt.creation.CreationSlot;
-import com.matt.entity.Entity;
 import com.matt.inventory.Inventory;
-import com.matt.inventory.Slot;
 import com.matt.item.Item;
-import com.matt.item.ItemTool;
-import com.matt.item.Items;
+
+/* Hacksaw Notes:
+ *  Completely deleted the instance variable
+ *  Block lastTaken = null;
+ *  because I saw no use beyond setting it to the
+ *  most recently taken item.  No benefit or use.
+ */
 
 /**
  * Represents the player, and receives the mouse and keyboard events
  * related to the player.
  * 
+ * Hacksaw: But it shouldn't deal with input.  To be fixed soon
+ * 
  * @author Matthew Williams
  *
  */
+
+//TODO: Gut out all the functionality that does not belong here.  Maybe have a separate Mouse Input Manager?
+
 public class Player {
 	//Start up variables for the Player class
 	public Rectangle rect;
 	public double speed;
 	public Inventory inventory;
 	public int selected, midX, midY;
-	public Block lastTaken = null;
 	public boolean fullInv = false;
 	
 	public Player() {
@@ -36,9 +41,17 @@ public class Player {
 		speed = O.playerSpeed;
 		this.inventory = new Inventory();
 		selected = 0;
-		//Set the middle point of the player for distance calculations
-		midX = O.playerX + (O.playerWidth / 2);
-		midY = O.playerY + (O.playerHeight / 2);
+		midX = rect.x + (rect.width / 2);
+		midY = rect.y + (rect.height / 2);
+	}
+	
+	public void move(double dx, double dy) {
+		//TODO: Implement player.move
+		//TODO: But maybe move should be handled on a higher level.  Maybe a generic moveEntity method with a desired dx and dy?
+		
+		//At end
+		midX = rect.x + (rect.width / 2);
+		midY = rect.y + (rect.height / 2);
 	}
 	
 	public void listen(int k, boolean down) {
@@ -55,81 +68,13 @@ public class Player {
 			O.LSHIFT = down;
 		} else if (down) {
 			//Check all the numbers in the range for hotbar slots, and see if that is what they pressed
-			for (int x = 1; x <= O.hotCount; x++) {
-				//48 is the value for 0, so when x=1, it is checking if they pressed 1
-				if (k == 48 + x) {
-					selected = x-1;
+			for (int x = 0; x < O.hotCount; x++) {
+				//48 is the value for 0, so when x=0, it is checking if they pressed 1
+				if (k == 49 + x) {
+					selected = x;
 				}
 			}
 		}
-	}
-	
-	public void leftClick(Block block) {				//Left click in the World
-		Item selectedItem = inventory.getSelectedItem();												//Record the selected item
-		if (selectedItem == null || selectedItem.getTypeId() == O.item) {
-			int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);
-			if (distance <= O.placeDistance && block != null && block.getHarvestLevel() == 0) {
-				
-			}
-		} else if (selectedItem.getTypeId() == O.toolItem) {
-			ItemTool tool = (ItemTool)selectedItem;
-			//Meant for breaking, but what? (Post mark: I have no idea what that comment meant)
-			int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);
-			if (distance <= O.placeDistance && block != null && tool.getHarvestLevel() >= block.getHarvestLevel()) {
-				
-			}
-		}
-		if (selectedItem == null || selectedItem.getTypeId() == 0 || selectedItem.getTypeId() == 1) {	//If the player isn't holding aynthing, or is holding a block, or tool that can break
-			int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);									//Calculate the distance between the block and the player
-			if (block != null && block.getId() != 0 && distance <= O.placeDistance) {						//If the block hits the mouse, and doesn't hit the player, and isn't sky
-				Item newItem = block.getDroppedItem();															//Get the Item from the Block
-				block = new Block();																			//Set the Block as sky
-				if (newItem != null && !O.player.give(newItem, 1)) {											//If You can't give the player the item
-					block = newItem.getBlock();																		//Set the block as the item again
-				}
-				
-				if (O.tutProgress[1]) {O.tutProgress[2] = true;}										//Toggle the tutorial marker
-			}
-		}
-	}
-	
-	public void breakAt(Block block) {
-		int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);
-		if (distance <= O.placeDistance) {
-			Item holding = inventory.getSelectedItem();
-			if (holding == null || holding.getTypeId() != O.toolItem) {
-				if (block.getHarvestLevel() == 0) {
-					block.hit(Items.hand);
-				}
-			} else if (holding.getTypeId() == O.toolItem) {
-				ItemTool tool = (ItemTool)holding;
-				if (tool.getHarvestLevel() >= block.getHarvestLevel()) {
-					block.hit(tool);
-				}
-			}
-		}
-	}
-	
-	public void tickMouseWatcher() {
-		if (O.mouseLeftDown) {
-			
-			if (!O.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
-				try {
-					Block hitB = O.world.getBlocks(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY).get(0);
-					breakAt(hitB);
-				} catch (IndexOutOfBoundsException p) {}
-			}
-			
-		} else if (O.mouseRightDown) {
-			
-			if (!O.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
-				try {
-					O.world.getBlocks(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY).get(0).activate();
-				} catch (IndexOutOfBoundsException p) {}
-			}
-			
-		}
-		Blocks.tick();
 	}
 	
 	public void leftClick(CreationSlot slot) {			//Left click in the Creation Menu
@@ -141,61 +86,20 @@ public class Player {
 		}
 	}
 	
-	public void leftClick(Slot slot) {					//Left click in the Inventory
-		if (slot != null) {
-			if (slot.getItem() == O.mouse.item) {
-				slot.takeAllFromMouse();
-			} else {
-				slot.swapWithMouse();
-			}
-		}
-	}
-	
-	public void rightClick(Block block) {				//Right click in the World
-		Item selectedItem = inventory.getSelectedItem();		//Record the selected item
-		if (selectedItem != null && selectedItem.getTypeId() == O.placeableItem) {	//If the item you are holding is placeable
-			int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);		//Record the distance between the block & player
-			
-			//If you can place there, block isn't null, it's close enough, not touching player, and you can place over that block you are looking at:
-			if (block != null && distance <= O.placeDistance && (!block.getRect().intersects(this.rect) || !selectedItem.getBlock().getCollides()) && block.getPlaceOver()) {
-				for (Entity entity: O.world.middleEntities) {								 //Refer to item.getBlock.getCollides
-					if (block.getRect().intersects(entity.getModel().hit_box.get(0).rect) && selectedItem.getBlock().getCollides()) {
-						return;
-					}
-				}
-				
-				if (O.player.takeBySlot(O.player.selected, 1)) {
-					block = new Block(O.player.lastTaken);
-					if (O.tutProgress[2] && !O.tutProgress[3]) {O.tutProgress[3] = true;}
-				}
-			}
-		}
-	}
-	
-	public void rightClick(Slot slot) {					//Right click in the inventory
-		if (slot != null) {
-			if (O.mouse.item == null && slot.getCount() > 0) {
-				slot.giveHalfToMouse();
-			} else {
-				slot.takeOneFromMouse();
-			}
-		}
-	}
-	
+	//TODO: This isn't being called right now.  Once this is reinstated, this method needs to move
 	public boolean canCreate(CreationSlot slot) {
-		boolean can = true;
 		try {
 			
 			for (int x = 0; x < slot.requireds.length; x++) {
 				if (!this.has(slot.requireds[x].getId(), slot.required_counts[x])) {
-					can = false;
+					return false;
 				}
 			}
 		} catch (NullPointerException e) {
-			can = false;
+			return false;
 		}
 		
-		return can;
+		return true;
 	}
 	
 	public boolean give(Item item, int count) {
@@ -204,7 +108,7 @@ public class Player {
 	
 	public boolean takeBySlot(int slot, int count) {
 		try {
-			this.lastTaken = inventory.takeBySlot(slot, count).getBlock();
+			inventory.takeBySlot(slot, count).getBlockMold();
 			return true;
 		} catch (NullPointerException e) {
 			return false;
@@ -224,13 +128,18 @@ public class Player {
 		return this.inventory.has(id, count);
 	}
 	
+	public Item getSelectedItem() {
+		return this.inventory.getSelectedItem(selected);
+	}
+	
 	public void toggleInv() {
 		if (!this.fullInv && O.creationWindow.visible) {
 			O.creationWindow.hide();
 		}
-		//Toggle the full iscreen version of the inventory
+		//Toggle the full-screen version of the inventory
 		this.fullInv = !this.fullInv;
 		inventory.full = !inventory.full;
+		
 		if (O.tutProgress[3] && !O.tutProgress[4]) {
 			O.tutProgress[4] = true;
 		}
@@ -242,6 +151,8 @@ public class Player {
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 		g.setColor(Color.black);
 		g.drawRect(rect.x, rect.y, rect.width, rect.height);
-		this.inventory.display(g);
+		
+		//TODO: Refactor this to remove the need for the additional parameters
+		this.inventory.display(g, selected, fullInv);
 	}
 }

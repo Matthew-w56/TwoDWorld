@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.matt.O;
 import com.matt.block.Block;
-import com.matt.block.Blocks;
+import com.matt.block.BlockMolds;
 
 /**
  * Generates the landscape of one chunk given a previous chunk (for
@@ -70,18 +70,18 @@ public class WorldGenerator {
 		for (int r = 0; r < O.chunkSize * O.chunkRatio; r++) {						//For every row in this chunk
 			for (int c = 0; c < O.chunkSize; c++) {									//For every column in that row
 				if (r < chunk.getPos(c)) {												//Above Midline
-					chunk.setBlock(r, c, new Block(Blocks.air));											//Set air block
+					chunk.setBlock(r, c, new Block(BlockMolds.air));											//Set air block
 				} else if (r >= chunk.getPos(c) && r < chunk.getPos(c) + O.rockDepth) {//Inbetween Midline, and rock depth
-					chunk.setBlock(r, c, new Block(Blocks.dirt));											//Set green block
+					chunk.setBlock(r, c, new Block(BlockMolds.dirt));											//Set green block
 				} else if (r == (O.chunkSize * O.chunkRatio) - 1) {						//Bottom Block
-					chunk.setBlock(r, c, new Block(Blocks.bottom));											//Set bottom block
+					chunk.setBlock(r, c, new Block(BlockMolds.bottom));											//Set bottom block
 				} else if (r >= (chunk.getPos(c) + O.dirtDepth)) {						//Below the dirt line, and above the bottom block
-					chunk.setBlock(r, c, new Block(Blocks.stone));											//Set rock block
+					chunk.setBlock(r, c, new Block(BlockMolds.stone));											//Set rock block
 				} else {															//Inbetween the rock line and dirt line (mixed area)
 					if (random.nextInt(O.rockChance) <= r - (chunk.getPos(c) + O.rockDepth)) {//chance
-						chunk.setBlock(r, c, new Block(Blocks.stone));											//Set rock block
+						chunk.setBlock(r, c, new Block(BlockMolds.stone));											//Set rock block
 					} else {															//The rest of the time
-						chunk.setBlock(r, c, new Block(Blocks.dirt));											//Set green block
+						chunk.setBlock(r, c, new Block(BlockMolds.dirt));											//Set green block
 					}
 				}
 			}
@@ -106,73 +106,73 @@ public class WorldGenerator {
 				if (c > 1 && c < O.chunkSize - 2) {
 					//System.out.println("[WorldGenerator] Tree.");
 					//Trunk of the tree
-					chunk.setBlock(r-1, c, new Block(Blocks.wood));
-					chunk.setBlock(r-2, c, new Block(Blocks.wood));
-					chunk.setBlock(r-3, c, new Block(Blocks.wood));
-					chunk.setBlock(r-4, c, new Block(Blocks.leaf));
+					chunk.setBlock(r-1, c, new Block(BlockMolds.wood));
+					chunk.setBlock(r-2, c, new Block(BlockMolds.wood));
+					chunk.setBlock(r-3, c, new Block(BlockMolds.wood));
+					chunk.setBlock(r-4, c, new Block(BlockMolds.leaf));
 					
 					//Leaf blocks around it
-					chunk.setBlock(r-4, c-1, new Block(Blocks.leaf));	chunk.setBlock(r-4, c-2, new Block(Blocks.leaf));
-					chunk.setBlock(r-4, c+1, new Block(Blocks.leaf));	chunk.setBlock(r-4, c+2, new Block(Blocks.leaf));
-					chunk.setBlock(r-6, c, new Block(Blocks.leaf));		chunk.setBlock(r-6, c+1, new Block(Blocks.leaf));
-					chunk.setBlock(r-6, c-1, new Block(Blocks.leaf));	chunk.setBlock(r-5, c, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c+1, new Block(Blocks.leaf));	chunk.setBlock(r-5, c-1, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c+2, new Block(Blocks.leaf));	chunk.setBlock(r-5, c-2, new Block(Blocks.leaf));
+					chunk.setBlock(r-4, c-1, new Block(BlockMolds.leaf));	chunk.setBlock(r-4, c-2, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-4, c+1, new Block(BlockMolds.leaf));	chunk.setBlock(r-4, c+2, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-6, c, new Block(BlockMolds.leaf));		chunk.setBlock(r-6, c+1, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-6, c-1, new Block(BlockMolds.leaf));	chunk.setBlock(r-5, c, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c+1, new Block(BlockMolds.leaf));	chunk.setBlock(r-5, c-1, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c+2, new Block(BlockMolds.leaf));	chunk.setBlock(r-5, c-2, new Block(BlockMolds.leaf));
 					
 				} else if (c < 2) {
 					//Tree on left side
 					//System.out.println("[WorldGenerator] Creating tree on left side of chunk");
-					chunk.setBlock(r-1, c, new Block(Blocks.wood));		chunk.setBlock(r-2, c, new Block(Blocks.wood));
-					chunk.setBlock(r-3, c, new Block(Blocks.wood));		chunk.setBlock(r-4, c, new Block(Blocks.leaf));
-					chunk.setBlock(r-6, c, new Block(Blocks.leaf));		chunk.setBlock(r-5, c, new Block(Blocks.leaf));
-					chunk.setBlock(r-4, c+1, new Block(Blocks.leaf));	chunk.setBlock(r-6, c+1, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c+1, new Block(Blocks.leaf));	chunk.setBlock(r-4, c+2, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c+2, new Block(Blocks.leaf));
+					chunk.setBlock(r-1, c, new Block(BlockMolds.wood));		chunk.setBlock(r-2, c, new Block(BlockMolds.wood));
+					chunk.setBlock(r-3, c, new Block(BlockMolds.wood));		chunk.setBlock(r-4, c, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-6, c, new Block(BlockMolds.leaf));		chunk.setBlock(r-5, c, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-4, c+1, new Block(BlockMolds.leaf));	chunk.setBlock(r-6, c+1, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c+1, new Block(BlockMolds.leaf));	chunk.setBlock(r-4, c+2, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c+2, new Block(BlockMolds.leaf));
 					
 					if (c > 0) { //c == 1
-						chunk.setBlock(r-4, c-1, new Block(Blocks.leaf));
-						chunk.setBlock(r-6, c-1, new Block(Blocks.leaf));
-						chunk.setBlock(r-5, c-1, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-4, last}, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-5, last}, new Block(Blocks.leaf));
+						chunk.setBlock(r-4, c-1, new Block(BlockMolds.leaf));
+						chunk.setBlock(r-6, c-1, new Block(BlockMolds.leaf));
+						chunk.setBlock(r-5, c-1, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-4, last}, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-5, last}, new Block(BlockMolds.leaf));
 						chunk.treeOffset = 2;
 					} else if (c == 0) {
-						chunk.reqBlockL(new int[] {r-4, last}, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-6, last}, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-5, last}, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-4, last-1}, new Block(Blocks.leaf));
-						chunk.reqBlockL(new int[] {r-5, last-1}, new Block(Blocks.leaf));
+						chunk.reqBlockL(new int[] {r-4, last}, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-6, last}, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-5, last}, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-4, last-1}, new Block(BlockMolds.leaf));
+						chunk.reqBlockL(new int[] {r-5, last-1}, new Block(BlockMolds.leaf));
 						chunk.treeOffset = 3;
 					}
 				} else {
 					//Tree on right side
 					//System.out.println("[WorldGenerator] Creating tree on right side of chunk");
-					chunk.setBlock(r-1, c, new Block(Blocks.wood));		chunk.setBlock(r-2, c, new Block(Blocks.wood));
-					chunk.setBlock(r-3, c, new Block(Blocks.wood));		chunk.setBlock(r-4, c, new Block(Blocks.leaf));
-					chunk.setBlock(r-6, c, new Block(Blocks.leaf)); 	chunk.setBlock(r-5, c, new Block(Blocks.leaf));
-					chunk.setBlock(r-4, c-1, new Block(Blocks.leaf));	chunk.setBlock(r-6, c-1, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c-1, new Block(Blocks.leaf));	chunk.setBlock(r-4, c-2, new Block(Blocks.leaf));
-					chunk.setBlock(r-5, c-2, new Block(Blocks.leaf));
+					chunk.setBlock(r-1, c, new Block(BlockMolds.wood));		chunk.setBlock(r-2, c, new Block(BlockMolds.wood));
+					chunk.setBlock(r-3, c, new Block(BlockMolds.wood));		chunk.setBlock(r-4, c, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-6, c, new Block(BlockMolds.leaf)); 	chunk.setBlock(r-5, c, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-4, c-1, new Block(BlockMolds.leaf));	chunk.setBlock(r-6, c-1, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c-1, new Block(BlockMolds.leaf));	chunk.setBlock(r-4, c-2, new Block(BlockMolds.leaf));
+					chunk.setBlock(r-5, c-2, new Block(BlockMolds.leaf));
 					
 					if (c < O.chunkSize-1) {
-						chunk.setBlock(r-4, c+1, new Block(Blocks.leaf));
-						chunk.setBlock(r-6, c+1, new Block(Blocks.leaf));
-						chunk.setBlock(r-5, c+1, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-4, 0}, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-5, 0}, new Block(Blocks.leaf));
+						chunk.setBlock(r-4, c+1, new Block(BlockMolds.leaf));
+						chunk.setBlock(r-6, c+1, new Block(BlockMolds.leaf));
+						chunk.setBlock(r-5, c+1, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-4, 0}, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-5, 0}, new Block(BlockMolds.leaf));
 						chunk.treeOffset = 2;
 					} else if (c == O.chunkSize-1) {
-						chunk.reqBlockR(new int[] {r-4, 0}, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-6, 0}, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-5, 0}, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-4, 1}, new Block(Blocks.leaf));
-						chunk.reqBlockR(new int[] {r-5, 1}, new Block(Blocks.leaf));
+						chunk.reqBlockR(new int[] {r-4, 0}, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-6, 0}, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-5, 0}, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-4, 1}, new Block(BlockMolds.leaf));
+						chunk.reqBlockR(new int[] {r-5, 1}, new Block(BlockMolds.leaf));
 						chunk.treeOffset = 3;
 					}
 				}
 				c += 3;
 			} else if (random.nextInt(O.shrubChance) == 1) {
-				chunk.setBlock(r-1, c, new Block(Blocks.shrub));
+				chunk.setBlock(r-1, c, new Block(BlockMolds.shrub));
 			}
 		}
 		

@@ -1,0 +1,31 @@
+Model Classification
+
+While Entity Classes deal more with the abilities and logic, Model classes define
+the shape, and movement styles of the entity.
+
+----------[Visual Class Tree]----------
+
+				[Short]
+			   /
+		[Small]--[Tall]
+	   /
+[Model]---[Biped]
+       \
+        [Quadruped]
+
+
+----------[Short Descriptions]----------
+Alphabetically Sorted
+
+Biped: 		Any animal or entity with 2 legs, that would be similar to a person, zombie, etc.
+Quadruped: 	Any animal or entity with 4 legs, that would be similar to a pig, cow, wolf, horse, etc.
+Short: 		Different version of Small, where the hitbox is wider than it is tall
+Small: 		Anything so small, that a single rectangular hitbox will do, such as squirrels or bugs
+Tall: 		Different version of Small, where the hitbox is taller than it is wide
+
+
+----------[Currently Not Created]----------
+
+-Short
+-Small
+-Tall

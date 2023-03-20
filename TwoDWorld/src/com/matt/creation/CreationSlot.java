@@ -89,12 +89,14 @@ public class CreationSlot {
 				g.drawString(this.requireds[i].getDisplayName().replaceAll(" Block", ""), Xpos, Ypos - 3);
 				Xpos += 40;
 			}
-			
+			//TODO: Have a parent class or structure check if the player can
+			//		create this item, and set a boolean in this class.
+			/*
 			//Draw the tint, if the player cannot create it
 			if (!O.player.canCreate(this)) {
 				g.setColor(O.backTint);
 				g.fillRect(this.rect.x + 1, this.rect.y + 1, this.rect.width - 1, this.rect.height - 1);
-			}
+			}*/
 		} catch (NullPointerException e) {}
 	}
 }

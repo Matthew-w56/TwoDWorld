@@ -22,7 +22,7 @@ public class Screens {
 	public static void create() {
 		//--------------------------------------------------------------------------------------------------------------------------
 		//Main Menu Screen that shows when you press ESCAPE
-		System.out.println("Building Screens " + O.invWidth);
+		System.out.println("[Screens] Building Screen of inventory width " + O.invWidth);
 		Color greenButton = new Color(143, 179, 57);
 		Color backgroundColor = new Color(183, 206, 99);
 		Color darkerGreen = new Color(75, 88, 66);

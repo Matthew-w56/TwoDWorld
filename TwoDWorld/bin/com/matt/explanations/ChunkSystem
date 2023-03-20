@@ -1,0 +1,33 @@
+ChunkManager System:
+
+
+There are three lists for chunks in the world
+-Left Chunk List   (Chunks that are off to the left of the visible screen)
+-Middle Chunk List (Chunks actively being displayed, updated, and rendered)
+-Right Chunk List  (Chunks that are off to the right of the visible screen)
+
+
+-----[Creation and Set up]-----
+To start, the ChunkManager.generate() method puts a small amount of chunks in the left list, building
+first a starting chunk, then each chunk goes off from that one, each chunk being built off of
+the previously built chunk.
+Then, the ChunkManager.generate() method builds the middle list, going from left to right in the same way.
+Lastly, it generates the right chunk list going left to right again, building off the previuosly
+built chunk.
+
+All of the creation is done by passing the chunk being created, the previously generated chunk, and the
+positional relation between them (Which is on the left/right of which) to the WorldGenerator.create() method
+
+
+-----[RunTime and Storing]-----
+During runtime, only the chunks in the Middle List are actively being updated, moved, checked for
+editing from player, and displayed.  The left and right chunk lists are simply stacks of currently
+unused chunks to be used later when the player moved over to them.  As the leftmost chunk in the
+Middle list enters the visible screen, it toggles a need to move another chunk from the left list
+into the Middle list.  This is the same for the Rightmost chunk entering the screen.
+
+When a chunk leaves the visible screen far enough due to the player moving around, it is moved to
+the corresponding list, and removed from the Middle list and updating, until it is retrieved again.
+
+-----[Location]-----
+World, ChunkManager, Chunk, Block, and Mouse classes.

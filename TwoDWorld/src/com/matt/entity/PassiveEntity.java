@@ -1,6 +1,5 @@
 package com.matt.entity;
 
-import com.matt.O;
 import com.matt.entity.model.Model;
 
 /**
@@ -22,30 +21,15 @@ public class PassiveEntity extends Entity {
 		this.wander = 0;
 	}
 	
-	public void update() {
-		if (O.shouldMove && !O.player.fullInv && !O.menu.inMenu) {
-			this.update_vision();					//Update if the entity can see the player
-			this.find_movement();					//Decide how to move
-			this.update_physics();					//Update Forced Variables such as gravity
-			this.move("passive entity (update)");	//Move
-			this.update_validity();
-		}
-	}
-	
-	public void update_physics() {
-		//Adjust the model's Y Velocity to account for gravity
-		this.model.adjust_yVel(O.gravity, "passive entity (gravity)");
-	}
-	
 	public boolean decideAttack() {
 		return false;
 	}
 	
-	public void find_movement() {
+	public void findMovement() {
 		if (this.waiting == 0) {
 			if (this.wander == 0) {
 				this.waiting = random.nextInt(300) + 100;
-				this.set_wander();
+				this.setWander();
 			} else if (this.wander_dir == 1) {
 				//System.out.println("[PassiveEntity] Moving right");
 				this.model.move_speed = this.model.speed;
@@ -57,7 +41,7 @@ public class PassiveEntity extends Entity {
 			this.model.move_speed = 0;
 			this.waiting --;
 			if (this.waiting == 0) {
-				this.set_wander();
+				this.setWander();
 			}
 		}
 	}

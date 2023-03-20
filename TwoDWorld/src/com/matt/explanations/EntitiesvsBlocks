@@ -1,0 +1,4 @@
+Entities VS Blocks And Variable Names
+
+Entities have hit_box's, Blocks have rect's, there are close to the same thing
+The hit_box is a list of Rectangles, while the rect is a single rectangle

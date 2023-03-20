@@ -52,13 +52,20 @@ public class ItemTool extends Item {
 		return this.material;
 	}
 	
-	public void decDurability() {
+	/**
+	 * Decreases this tool's durability, then returns
+	 * whether the tool broke.
+	 * 
+	 * @return True if the took broke, False otherwise
+	 */
+	public boolean decDurability() {
 		if (this.durability != -1) {
 			this.durability--;
 			if (this.durability == 0) {
-				O.player.takeBySlot(O.player.selected, 1);
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	public int getCurrentDurability() {

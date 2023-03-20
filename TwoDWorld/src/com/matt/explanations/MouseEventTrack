@@ -1,0 +1,51 @@
+So I attempted to solve the tutorial problem (not continuing the tutorial when the player breaks a block)
+but realized that the entire method the call was in isn't getting called. So, where was it?  It took more
+searching and tracking that I thought it would, so here's the lineup
+
+1) Player clicks the mouse
+2) Mouse.java receives the event
+3) Mouse checks if the inventory is open
+		if so, it finds the slot, and passes it on to the player
+		with the associated slot
+4) If not, it checks to see if the menu is open. If so, it deals
+		with any button events.
+5) If not, it checks to see if the creation window is open
+		if so, it finds the slot, and passes it to the player
+6) If not, it is assumed that the player just in the world, and
+		it looks for any entities that are being touched and deals
+		with them.
+7) But then if none of those things apply, it just stops there. no
+		passing to the player occurs.  This is because the things
+		like block breaking and such are supposed to reccur while
+		the button is pressed. So this method's job is just to set
+		the environment state so that other threads can act accordingly.
+8) At the start of the program, a thread is started in Threads.java called
+		painter.  This loops, calling the world's paint method as well as
+		a method the Player.java class has that checks the environment
+		state in terms of if the mouse is clicked, and calls either the
+		hit() or activate() method of a block that the mouse is touching
+		if the constraints like distance and collision tests check out.
+9) The block then deals with it's own durability, and takes a Tool from the
+		player to take into account.
+
+
+
+Wow, what a journey to fix a small flag ticking error.  But it was good because
+I realized that I had multiple methods that were A) not being called and B) not
+even finished in the first place.  At some point, I had written methods to do all
+the same stuff in a slightly less thought through way, and those were the methods
+that called the state change for the tutorial flag.  Whew.
+
+
+
+Also, I deleted it, but enjoy is piece of comedy gold that was a comment in the
+vistigal method.  Today, on April 5th, 2022, I do not remember either commitment
+to this comment line:
+} else if (selectedItem.getTypeId() == O.toolItem) {
+			ItemTool tool = (ItemTool)selectedItem;																			   *********
+			//Meant for breaking, but what? (Post mark: I have no idea what that comment meant)                                * Gold. *
+			int distance = (int)Math.hypot(O.MX - midX, O.MY - midY);														   *********
+			if (distance <= O.placeDistance && block != null && tool.getHarvestLevel() >= block.getHarvestLevel()) {
+				System.out.println("[Player.leftClick] Tutorial Progress Block C");
+			}
+		}

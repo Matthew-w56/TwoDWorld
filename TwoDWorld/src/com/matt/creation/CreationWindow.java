@@ -51,7 +51,9 @@ public class CreationWindow {
 	public void show() {
 		ArrayList<CreationSlot> slots = new ArrayList<CreationSlot>(this.slots);
 		int counter = 0;
-		
+		//TODO: Find a way to check which slots are creatable without having the window have
+		//		access to the player.
+		/*
 		//Register all the slots that can be created currently
 		for (int i = 0; i < slots.size(); i++) {
 			CreationSlot slot = slots.get(i);
@@ -59,9 +61,8 @@ public class CreationWindow {
 				slot.findPos(slotStartX, slotStartY, gridX, counter);
 				counter++;
 				slots.remove(slot);
-			} else {
 			}
-		}
+		}*/
 		//Register the other slots
 		for (CreationSlot slot: slots) {
 			slot.findPos(slotStartX, slotStartY, gridX, counter);

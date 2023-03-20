@@ -1,0 +1,23 @@
+Entity System
+
+----------[How It Works]----------
+So there is a master-list in the O.world class called middleEntities that holds all the
+Entities that are in the middle area, and as such as updated and moved around.  Once an
+entity finds itself touching no chunks, which means it is not in the middle anymore, it
+it is attached to the top chunk of the chunk stack at the side it went off at.  So, if
+an entity ended up off the right side, it would be attatched to the leftMost chunk in the
+chunkListRight list.
+
+Each Chunk has a small list attatched to it to hold Entities, and a method that flushed the
+entities out of it, adding them to the middle list agian.  This method is called when the 
+chunk is added back to the middle list itself.
+
+
+----------[Parts of an Entity]----------
+Every Entity is split into two parts:
+-an Entity Class (Which is like the brain)
+-a Model Class (Which is like the body/puppet)
+
+The Entity Class of it makes logical choices of what to do, where to go, and how to do things
+The Model Class of it is the body of the entity, so it is the list of hit_boxes, and movement methods,
+	and things like that for the entity

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import com.matt.O;
-import com.matt.block.Block;
+import com.matt.block.BlockMold;
 
 /**
  * An Item is an inventory representation of something in the world.
@@ -15,7 +15,7 @@ import com.matt.block.Block;
  */
 public class Item {
 	
-	protected Block placingBlock;
+	protected BlockMold placingBlock;
 	protected Color color = Color.gray;
 	protected String displayName = "Default Item";
 	protected int id = -1, typeId = -1, stackSize = O.maxStackSize;
@@ -31,7 +31,7 @@ public class Item {
 		this.color = color;
 	}
 	
-	public Item(int id, String name, Color color, Block placingBlock) {
+	public Item(int id, String name, Color color, BlockMold placingBlock) {
 		this.typeId = O.placeableItem;
 		this.displayName = name;
 		this.id = id;
@@ -44,7 +44,7 @@ public class Item {
 		this.displayName = item.getDisplayName();
 		this.color = item.getColor();
 		this.id = item.getId();
-		this.placingBlock = item.getBlock();
+		this.placingBlock = item.getBlockMold();
 	}
 	
 	public Color getColor() {
@@ -79,7 +79,7 @@ public class Item {
 		return this.typeId;
 	}
 	
-	public Block getBlock() {
+	public BlockMold getBlockMold() {
 		return this.placingBlock;
 	}
 	

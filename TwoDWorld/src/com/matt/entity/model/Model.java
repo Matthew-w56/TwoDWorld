@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import com.matt.O;
-import com.matt.block.Block;
 
 /**
  * Every entity has a Model, which outlines where the entity does
@@ -23,7 +22,7 @@ public class Model {
 	public boolean built = false;
 	public boolean outline = false;
 	public int width, height, direction;
-	protected double yVel;
+	public double yVel;
 	public double move_speed, speed;
 	public boolean on_ground = false;
 	public ArrayList<ModelBlock> hit_box, sensors;
@@ -53,28 +52,11 @@ public class Model {
 		this.yVel = 0;					//Set yVelocity as 0
 	}
 	
-	public void move(String source) {
-		if (this.built) {
-			//System.out.println("[Model] Movement being updated by: " + source.toUpperCase());
-			moveX(this.move_speed);
-			moveY(this.yVel);
-		}
-	}
-	
 	public void print_pos() {
 		System.out.println("[Model] Current Position: (" + this.pos[0] + ", " + this.pos[1] + ")");
 	}
 	
-	public void move(double x, double y, String source) {	//Moves the position of the model, then updates the hitbox
-		if (this.built) {
-			//System.out.println("[Model] Being MOVED by: " + source.toUpperCase());
-			moveX(x);
-			moveY(y);
-		}
-	}
-	
-	public void moveX(double x) {
-		int dx = check_movementX((int) x);
+	public void moveX(double dx) {
 		if ((dx < 0 && this.direction == 1) || (dx > 0 && this.direction == 0)) {
 			flip();
 		}
@@ -82,8 +64,7 @@ public class Model {
 		update_hitBox();
 	}
 	
-	public void moveY(double y) {
-		int dy = check_movementY((int) y);
+	public void moveY(double dy) {
 		this.pos[1] += dy;
 		update_hitBox();
 	}
@@ -94,85 +75,6 @@ public class Model {
 			this.pos[0] += (int)x;
 			this.pos[1] += (int)y;
 			update_hitBox();
-		}
-	}
-	
-	public void pushTo(double x, double y, String source) {
-		//System.out.println("[Model] Being pushed to (" + (int)x + ", " + (int)y + ") by: " + source.toUpperCase());
-		this.pos[0] = (int)x;
-		this.pos[1] = (int)y;
-		update_hitBox();
-	}
-	
-	public int check_movementX(int x) {
-		//Set up a testRect at the same position as the entity
-		Rectangle testRect = new Rectangle(this.hit_box.get(0).rect);
-		
-		//Record the starting x position for later referal
-		int startX = testRect.x;
-		
-		//Actually move the test rect
-		testRect.x += x;
-		
-		for (ModelBlock sensor: this.sensors) {
-			sensor.setActive(false);
-		}
-		
-		ArrayList<Block> collide_list = O.world.getCollidingBlocks(testRect);
-		if (collide_list.size() > 0) {
-			Block b = collide_list.get(0);
-			if (x > 0) {
-				testRect.x = b.getRect().x - testRect.width;
-			} else if (x < 0) {
-				testRect.x = b.getRect().x  + b.getRect().width;
-			}
-			
-			for (Block block: collide_list) {
-				for (ModelBlock sensor: this.sensors) {
-					if (sensor.rect.intersects(block.getRect())) {
-						sensor.setActive(true);
-					}
-				}
-			}
-		}
-		
-		//Return how much the testRect actually successfully moved
-		return testRect.x - startX;
-	}
-	
-	public int check_movementY(int y) {
-		//Set a testRect as the same as entity rect
-		Rectangle testRect = new Rectangle(this.hit_box.get(0).rect);
-		
-		//Record where it started, then move it
-		int startY = testRect.y;
-		testRect.y += y;
-		
-		//Assume on_ground to be false, then check to see if it is
-		//true with the collisions
-		this.on_ground = false;
-		
-		ArrayList<Block> collide_list = O.world.getCollidingBlocks(testRect);
-		if (collide_list.size() > 0) {
-			Block b = collide_list.get(0);
-			if (y > 0) {
-				testRect.y = b.getRect().y - testRect.height;
-				this.yVel = 0;
-				this.on_ground = true;
-			} else if (y < 0) {
-				testRect.y = b.getRect().y + b.getRect().height;
-			}
-		}
-		
-		//Record how much the testRect actually successfully moved, and return it
-		return testRect.y - startY;
-	}
-	
-	public void turn() {		//Reverses the direction of the model
-		if (this.direction == 1) {
-			this.direction = 0;
-		} else {
-			this.direction = 1;
 		}
 	}
 	

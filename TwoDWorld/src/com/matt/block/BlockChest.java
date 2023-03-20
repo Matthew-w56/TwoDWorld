@@ -13,12 +13,17 @@ import com.matt.block.material.BlockMaterial;
  * @author Matthew Williams
  *
  */
-public class BlockChest extends Block {
+public class BlockChest extends BlockMold {
 	public BlockChest(int id, BlockMaterial blockMaterial, Color color, boolean placeOver, String name) {
 		super(id, blockMaterial, color, placeOver, name);
 	}
 	
+	@Override
+	public void activate(Block b) {
+		super.activate(b); //TODO
+	}
+	
 	public void open() {
-		
+		//TODO
 	}
 }

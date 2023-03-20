@@ -15,12 +15,16 @@ import com.matt.item.Item;
  */
 public class InventorySlot extends Slot {
 	
-	public InventorySlot(Item item, int c, int x, int y) {
+	protected int n = -1;
+	
+	//C is count of item, x and y are positional values, and n in the index in the hotbar
+	public InventorySlot(Item item, int c, int x, int y, int n) {
 		super(item, c, x, y);
 		this.rect = new Rectangle(x, y, O.slotSize, O.slotSize);
+		this.n = n;
 	}
 	
-	public void display(Graphics g) {
+	public void display(Graphics g, int selected, boolean fullInv) {
 		//------[Draw the slot itself]------
 		g.setColor(Color.gray);
 		g.fillOval(pos[0], pos[1], pos[2], pos[3]);
@@ -30,8 +34,7 @@ public class InventorySlot extends Slot {
 		//------[Draw the item, if the slot isn't empty]------
 		if (this.item != null) {
 			this.item.display(g, pos[0] + O.slotSize / 5, pos[1] + O.slotSize / 5, 1);
-			if (O.player.inventory.hotbar[O.player.selected] == this && !O.player.fullInv) {
-				
+			if (selected == this.n && !fullInv) {
 				//-----[Display the item's name]-----
 				g.setColor(Color.black);
 				g.setFont(O.itemNameFont);

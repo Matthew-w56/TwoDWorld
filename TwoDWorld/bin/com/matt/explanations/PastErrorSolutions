@@ -1,0 +1,72 @@
+Previous Errors and Their Solutions:
+
+--------------------------------------------------------------------------------------
+
+Entities Teleporting when they turn around:
+
+-Problem: When an entity would turn around, it would generally
+ teleport up above the wall they were against.
+ 
+-Solution: Fixing the hitBox area to be symmetrical
+
+--------------------------------------------------------------------------------------
+
+Entities Not interacting with the terrain correctly when player was moving, too:
+
+-Problem: When the player was sitting still, the entities walked around
+ the world just fine.  When the player started moving, they would
+ seem to move with the world, but just a step behind.  They would
+ end up colliding with blocks they weren't supposed to be able to
+ collide with.
+ 
+-Solution: I found that the call to update the hitBoxes of all the
+ terrain blocks was only being called in the moveX method of
+ ChunkManager, and not the moveY, so when the player jumped, the
+ boxes were not being updated.  So, the entity appeared to be
+ moving into the blocks.  I just placed the call, and it was fixed.
+ 
+ --------------------------------------------------------------------------------------
+ 
+ Everything running slow:
+ 
+ -Problem: When I was checking for collisions, it was looping through every
+  single block in the middle list (Which is about 14,400 blocks)
+  for every single entity and player and mouse click seperately.
+  When recorded, this added up to about 27,000 collision tests
+  each game tick
+ 
+ -Solution: I set it up to mathmatically find out the viable areas where it
+  is worth it to check for collision for each thing, so that they
+  only check for collision with the blocks around them.  This
+  reduced the collisions each tick to about 190-250 (~100x faster).
+ 
+ --------------------------------------------------------------------------------------
+ 
+ Chunk Seams Breaking:
+ 
+ -Problem: Whenever a chunk with an entity stored inside it was loaded,
+  it would be placed about 5-7 pixels off away from the other chunks.
+  When the player moved towards the middle of it, it would move the
+  opposite way, and introduce more chunks totaling about 50-70 and keep
+  going until the inventory was activated, the menu was opened, or the
+  user quit.
+ 
+ -Solution: I'm not completely certain as to why it worked, but when I
+  swapped "Move Block One" and "Move Block Two" in the ChunkManager
+  ChunkToLeft and ChunkToRight methods, it stopped failing, and started
+  working again.
+  
+ --------------------------------------------------------------------------------------
+ 
+ Same Items Sharing Durability:
+ 
+ -Problem: When an item (ex. Wood Axe) was used, the durability decrease
+  would affect every Wood Axe, whether or not it was crafted yet at the
+  time or not.  And as one would break, it would get discarded, leaving
+  all the others with a negative durability, making them invincible.
+  
+ -Solution: When the item was being crafted, the player was being given
+  a direct reference to the model WoodAxe item, so every axe the player
+  had was simply the same item being in multiple places at once.  Once the
+  items were switched to getNew() calls for each, the problem was solved,
+  and items were seperate agian.

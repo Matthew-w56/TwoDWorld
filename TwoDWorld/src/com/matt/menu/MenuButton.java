@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 
+import com.matt.Main;
 import com.matt.O;
 
 /**
@@ -156,7 +157,7 @@ public class MenuButton {
 				O.menu.hide();
 			}
 		} else if (this.function_type == 1) {	//If the button closes the game
-			O.world.close();				//Close the game
+			Main.going = false;
 		}
 	}
 	
