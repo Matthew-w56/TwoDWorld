@@ -9,12 +9,12 @@ import java.awt.geom.AffineTransform;
 /**
  * Design Item for the Menu system (see docs for Menu)
  * Represents a block of text to be displayed on a screen
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class MenuLabel {
-	
+
 	MenuScreen screen;
 	String text;
 	public int extra;
@@ -22,22 +22,22 @@ public class MenuLabel {
 	Color color, bcolor, underline_color;
 	int x, y, w, h, Mu, Md, Ml, Mr, underline_height;
 	boolean underline;
-	
+
 	public MenuLabel(MenuScreen screen, String text, int textSize) {
 		this.screen = screen;
 		this.text = text;
-		AffineTransform affinetransform = new AffineTransform();     
+		AffineTransform affinetransform = new AffineTransform();
 		FontRenderContext frc = new FontRenderContext(affinetransform,true,true);
 		this.font = new Font("Tahoma", Font.PLAIN, textSize);
 		this.w = (int)(font.getStringBounds(text, frc).getWidth());
 		this.h = (int)(font.getStringBounds(text, frc).getHeight());
 	}
-	
+
 	public void setColor(Color color) {
 		//Set the label's background color
 		this.color = color;
 	}
-	
+
 	public MenuLabel setPos(int x, int y) {
 		//Set the position of the button.  -1 signifies center
 		if (x == -1) {
@@ -52,32 +52,32 @@ public class MenuLabel {
 		}
 		return this;
 	}
-	
+
 	public MenuLabel setUnderline(Color color, int height) {
 		this.underline = true;
 		this.underline_color = color;
 		this.underline_height = height;
 		return this;
 	}
-	
+
 	public void setMarginX(int x) {
 		//Set the l & r margins
 		this.Ml = x;
 		this.Mr = x;
 	}
-	
+
 	public void setMarginY(int y) {
 		//Set the u & d margins
 		this.Mu = y;
 		this.Md = y;
 	}
-		
-	
+
+
 	public void setBColor(Color color) {
 		//Set the borderColor for the label
 		this.bcolor = color;
 	}
-	
+
 	public void display(Graphics g) {
 		if (this.color != null) {	//If this has a color
 			g.setColor(this.color);	//Set the color and Fill the background for the label

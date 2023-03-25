@@ -2,7 +2,7 @@ package com.matt.block.material;
 
 /**
  * Stores the different block material types
- * 
+ *
  * @author Matthew Williams
  *
  */

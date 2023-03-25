@@ -13,19 +13,19 @@ import javax.imageio.ImageIO;
  * Currently unimplemented.  When resources such as save files and
  * images are incorporated, this will handle all the IO work of
  * finding and reading the files.
- * 
+ *
  * I thought the imagery of a spider crawling around the files to
  * retrieve info for the program was fun.
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class FileSpider {
-	
+
 	public FileSpider() {}
-	
+
 	public ArrayList<String> getFileText(String path) {
-		ArrayList<String> endList = new ArrayList<String>();
+		ArrayList<String> endList = new ArrayList<>();
 		try {
 			Scanner scanner = new Scanner(new File(path));
 			while (scanner.hasNextLine()) {
@@ -37,10 +37,10 @@ public class FileSpider {
 		}
 		return endList;
 	}
-	
+
 	public BufferedImage getImage(String path) {
 		try {
-			return (BufferedImage)ImageIO.read(FileSpider.class.getResource(path));
+			return ImageIO.read(FileSpider.class.getResource(path));
 		} catch (IOException e) {
 			return null;
 		}

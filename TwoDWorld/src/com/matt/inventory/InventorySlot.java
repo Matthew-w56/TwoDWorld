@@ -9,28 +9,28 @@ import com.matt.item.Item;
 
 /**
  * Holds an item, and makes up part of the inventory as a whole.
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class InventorySlot extends Slot {
-	
+
 	protected int n = -1;
-	
+
 	//C is count of item, x and y are positional values, and n in the index in the hotbar
 	public InventorySlot(Item item, int c, int x, int y, int n) {
 		super(item, c, x, y);
 		this.rect = new Rectangle(x, y, O.slotSize, O.slotSize);
 		this.n = n;
 	}
-	
+
 	public void display(Graphics g, int selected, boolean fullInv) {
 		//------[Draw the slot itself]------
 		g.setColor(Color.gray);
 		g.fillOval(pos[0], pos[1], pos[2], pos[3]);
 		g.setColor(Color.black);
 		g.drawOval(pos[0], pos[1], pos[2], pos[3]);
-		
+
 		//------[Draw the item, if the slot isn't empty]------
 		if (this.item != null) {
 			this.item.display(g, pos[0] + O.slotSize / 5, pos[1] + O.slotSize / 5, 1);
@@ -40,7 +40,7 @@ public class InventorySlot extends Slot {
 				g.setFont(O.itemNameFont);
 				g.drawString(this.item.getDisplayName(), (pos[0] + (pos[2] / 2)) - (g.getFontMetrics().stringWidth(this.item.getDisplayName()) / 2), pos[1] - g.getFontMetrics().getHeight() - O.itemTextBuffer);
 			}
-			
+
 			//-----[Display the item count]-----
 			g.setColor(Color.black);
 			int x;

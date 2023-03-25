@@ -8,14 +8,14 @@ import com.matt.item.material.ItemMaterials;
 
 /**
  * Singleton class that stores the different items in the game.
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class Items {
 	//Item Items
 	public static final Item stick = new Item(11, "Stick", Color.white);
-	
+
 	//Block Items
 	public static final Item dirt = new Item(1, "Dirt", O.lightGreen, BlockMolds.dirt);
 	public static final Item stone = new Item(2, "Stone Block", Color.gray, BlockMolds.stone);
@@ -24,7 +24,7 @@ public class Items {
 	public static final Item bottom = new Item(5, "Bottom Block", O.offBlack, BlockMolds.bottom);
 	public static final Item shrub = new Item(6, "Shrub", O.darkGreen, BlockMolds.shrub);
 	//public static final Item woodChest = new Item(11, "Wooden Chest", O.alphaBlue, BlockMolds.woodChest);
-	
+
 	//Tool Items
 	public static final ItemTool hand = new ItemTool(0, ItemMaterials.hand, "hand", Color.yellow, "hand, axe, pickaxe");
 	public static final ItemTool woodPickaxe = new ItemTool(7, ItemMaterials.wood, "Wooden Pickaxe", O.darkPurple, "pickaxe");

@@ -7,12 +7,12 @@ import com.matt.entity.model.Model;
  * passively.  They mainly wander, choosing random
  * locations to go to next, and spend a good deal of
  * time stationary.
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class PassiveEntity extends Entity {
-	
+
 	public PassiveEntity(Model model) {
 		super(model);			//Create this as a new entity
 		this.sight = 1000;		//Set this entity's sight as 1000 px
@@ -20,11 +20,8 @@ public class PassiveEntity extends Entity {
 		this.max_health = 10;	//Set the max health as 10
 		this.wander = 0;
 	}
-	
-	public boolean decideAttack() {
-		return false;
-	}
-	
+
+	@Override
 	public void findMovement() {
 		if (this.waiting == 0) {
 			if (this.wander == 0) {

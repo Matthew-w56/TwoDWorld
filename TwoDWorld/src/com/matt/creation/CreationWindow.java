@@ -12,18 +12,18 @@ import com.matt.O;
  * The Creation Window goes with the menu system in a way, and
  * stores and displays the creation slots, allowing the player
  * to select and use different creation choices.
- * 
+ *
  * @author Matthew Williams
  *
  */
 public class CreationWindow {
-	
+
 	public boolean visible = false;
 	int gridX, gridY, width, height, posX, posY, slotStartX, slotStartY;
-	public ArrayList<CreationSlot> slots = new ArrayList<CreationSlot>();
+	public ArrayList<CreationSlot> slots = new ArrayList<>();
 	Rectangle exitButton;
 	Font titleFont = new Font("arial", 1, 25);
-	
+
 	public CreationWindow() {
 		this.width = O.creationGridX * O.creationSlotWidth + 30;
 		this.height = O.creationGridY * O.creationSlotHeight + 115;
@@ -34,11 +34,11 @@ public class CreationWindow {
 		this.slotStartX = this.posX + 15;
 		this.slotStartY = this.posY + 100;
 	}
-	
+
 	public void add(CreationSlot slot) {
 		slot.addTo(this);
 	}
-	
+
 	public void toggle() {
 		if (this.visible) {
 			this.hide();
@@ -46,10 +46,10 @@ public class CreationWindow {
 			this.show();
 		}
 	}
-	
+
 	//Shows all the creation slots.  Those that are currently available are shown first
 	public void show() {
-		ArrayList<CreationSlot> slots = new ArrayList<CreationSlot>(this.slots);
+		ArrayList<CreationSlot> slots = new ArrayList<>(this.slots);
 		int counter = 0;
 		//TODO: Find a way to check which slots are creatable without having the window have
 		//		access to the player.
@@ -68,10 +68,10 @@ public class CreationWindow {
 			slot.findPos(slotStartX, slotStartY, gridX, counter);
 			counter++;
 		}
-		
+
 		this.visible = true;
 	}
-	
+
 	public void hide() {
 		for (CreationSlot slot: this.slots) {
 			slot.rect.x = this.slotStartX;
@@ -79,7 +79,7 @@ public class CreationWindow {
 		}
 		this.visible = false;
 	}
-	
+
 	public void draw(Graphics g) {
 		//Fill the background
 		g.setColor(O.lightBlue);
@@ -93,16 +93,16 @@ public class CreationWindow {
 			}
 			g.drawRect(this.posX + c, this.posY + c, this.width - (2 * c), this.height - (2 * c));
 		}
-		
+
 		//Write the title
 		g.setColor(Color.black);
 		g.setFont(titleFont);
 		g.drawString("The Instrumentation Creation Station!", posX + 40, posY + 48);
-		
+
 		//Draw the inside zone
 		g.drawRect(slotStartX, slotStartY, gridX * O.creationSlotWidth, gridY * O.creationSlotWidth);
 	}
-	
+
 	public void display(Graphics g) {
 		if (this.visible) {
 			this.draw(g);

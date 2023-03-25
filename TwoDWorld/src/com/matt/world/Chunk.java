@@ -13,7 +13,7 @@ import com.matt.entity.Entity;
  * A chunk is helpful for the ChunkManager to manage
  * the world more effectively, and to allow the dynamic
  * caching and retrieval of blocks.
- * 
+ *
  * @author Matthew Williams
  *
  */
@@ -28,16 +28,16 @@ public class Chunk {
 	ArrayList<Block> reqLeftBlocks, reqRightBlocks;
 	public int endPosL, endPosR, treeOffset, s;
 	public boolean done;
-	
+
 	public Chunk(int x, int y, int s, Chunk ch) {
 		this.chunkBefore = ch;
 		this.treeOffset = 0;
-		this.entities = new ArrayList<Entity>();
+		this.entities = new ArrayList<>();
 		this.rect = new Rectangle(x, y, O.chunkWidth, O.chunkHeight * O.chunkRatio);
-		reqLeft = new ArrayList<int[]>();
-		reqRight = new ArrayList<int[]>();
-		reqLeftBlocks = new ArrayList<Block>();
-		reqRightBlocks = new ArrayList<Block>();
+		reqLeft = new ArrayList<>();
+		reqRight = new ArrayList<>();
+		reqLeftBlocks = new ArrayList<>();
+		reqRightBlocks = new ArrayList<>();
 		this.s = s;
 		this.endPosL = O.midline;
 		this.endPosR = O.midline;
@@ -45,11 +45,11 @@ public class Chunk {
 		if (s == 1) s++;
 		this.create(s, ch);
 	}
-	
+
 	public Chunk() {
 		this.rect = new Rectangle(-O.chunkWidth, -O.chunkHeight, O.chunkWidth, O.chunkHeight);
 	}
-	
+
 	public void fill() {
 		for (int r = 0; r < O.chunkSize * O.chunkRatio; r++) {
 			for (int c = 0; c < O.chunkSize; c++) {
@@ -57,51 +57,52 @@ public class Chunk {
 			}
 		}
 	}
-	
+
 	public void create(int s, Chunk chunk2) {
 		//Call the create method with a previous chunk input
-		O.worldGenerator.create(this, s, chunk2);
+		WorldGenerator.create(this, s, chunk2);
 	}
-	
+
 	public void setBlock(int r, int c, Block block) {
 		//Set a block on the list with the input
 		blocks[r][c] = block;
 	}
-	
+
 	public void reqBlockL(int[] pos, Block block) {
 		//Add a pos (row, column, block id) to the left list
 		this.reqLeft.add(pos);
 		this.reqLeftBlocks.add(block);
 	}
-	
+
 	public void reqBlockR(int[] pos, Block block) {
 		//Add a pos (row, column, block id) to the right list
 		this.reqRight.add(pos);
 		this.reqRightBlocks.add(block);
 	}
-	
+
 	public int getPos(int c) {
 		return this.topPos[c];
 	}
-	
+
 	public void addPos(int r, int c) {
 		//Add a block to a list of blocks that make up the top layer of ground
 		this.topPos[c] = r;
 	}
-	
-	public int[] getPosList() {
-		return this.topPos;
-	}
-	
+
 	public void initBlocks() {
-		//TODO: Where is this for?
+		for (int r = 0; r < blocks.length; r++) {
+			for (int c = 0; c < blocks[0].length; c++) {
+				blocks[r][c].rect.x = this.rect.x + (c * O.blockSize);
+				blocks[r][c].rect.y = this.rect.y + (r * O.blockSize);
+			}
+		}
 		return;
 	}
-	
+
 	public void addEntity(Entity e) {
 		this.entities.add(e);
 	}
-	
+
 	public void setDone(boolean b) {
 		this.done = b;
 	}

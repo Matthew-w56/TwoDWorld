@@ -24,28 +24,28 @@ import com.matt.world.WorldManager;
  */
 
 public class UIManager extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
-	public static final int FPS = 15;
-	
+	public static final int FPS = 60;
+
 	private DisplayPanel panel;
 	private WorldManager world_manager;
-	
+
 	public UIManager(WorldManager _world_manager, Mouse mouse) {
 		super();
-		
+
 		//Set the size, location, and title for the screen
 		setSize(O.screenWidth + 7, O.screenHeight + 30);
 		setLocationRelativeTo(null);
 		setTitle(O.screenTitle);
 		setResizable(O.resize);
-		
+
 		//Create and add the panel that listens, and draws everything
 		this.world_manager = _world_manager;
 		this.panel = new DisplayPanel(_world_manager, mouse);
 		this.add(panel);
 	}
-	
+
 	public void addListeners(InputManager input_manager) {
 		addWindowListener(input_manager);
 		addKeyListener(input_manager);
@@ -53,22 +53,22 @@ public class UIManager extends JFrame {
 		addMouseMotionListener(input_manager);
 		addMouseWheelListener(input_manager);
 	}
-	
+
 	public void begin() {
 		System.out.println("[UIManager] Added Listeners");
 		Screens.create();
 		System.out.println("[UIManager] Menu Screens Generated");
-		
+
 		new Thread() {
 			@Override public void run() {
 				graphicsLoop();
 			}
 		}.start();
 	}
-	
+
 	protected void graphicsLoop() {
 		this.setVisible(true);
-		
+
 		System.out.println("[UIManager] Started");
 		while (Main.going) {
 			repaint();
@@ -77,6 +77,7 @@ public class UIManager extends JFrame {
 			try {Thread.sleep(1000 / FPS);} catch (InterruptedException e) {}
 		}
 		System.out.println("[UIManager] Shutting Down");
+		this.dispose();
 	}
-	
+
 }
