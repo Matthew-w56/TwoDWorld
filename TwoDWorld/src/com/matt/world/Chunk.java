@@ -33,7 +33,7 @@ public class Chunk {
 		this.chunkBefore = ch;
 		this.treeOffset = 0;
 		this.entities = new ArrayList<>();
-		this.rect = new Rectangle(x, y, O.chunkWidth, O.chunkHeight * O.chunkRatio);
+		this.rect = new Rectangle(x, y, O.chunkWidth, O.chunkHeight);
 		reqLeft = new ArrayList<>();
 		reqRight = new ArrayList<>();
 		reqLeftBlocks = new ArrayList<>();

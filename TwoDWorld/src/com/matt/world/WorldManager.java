@@ -14,9 +14,6 @@ import com.matt.item.Item;
 import com.matt.item.ItemTool;
 import com.matt.item.Items;
 
-//TODO: BIG ONE!  All chunks in a continuous list, and indicies indicating which
-//		chunks are "active" or not.  No moving, no staching, just indicators
-
 public class WorldManager {
 
 	//Chunk Detection Rectangles
@@ -26,6 +23,10 @@ public class WorldManager {
 			new Rectangle(O.screenWidth, 0, 1, O.screenHeight)};
 
 	protected static final int TICKS_PER_SECOND = 60;
+	
+	//A bit of a violation to the single responsibility rule.  But I feel like
+	//	this is the best way to do it (efficient). TODO: Look into this structure later
+	protected Rectangle camera_frame;
 
 	protected World world;
 	protected int mouseX, mouseY;
@@ -34,6 +35,12 @@ public class WorldManager {
 		world = new World();
 		mouseX = -1;
 		mouseY = -1;
+		camera_frame = new Rectangle(-1000, -1000, -1, -1);
+	}
+	
+	public void initializeCameraFrameSize(int width, int height) {
+		camera_frame.width = width;
+		camera_frame.height = height;
 	}
 
 	public void generateNewWorld() {
@@ -54,9 +61,7 @@ public class WorldManager {
 	}
 
 	public void close() {
-		System.out.println();
-		System.out.println();
-		System.out.println();
+		System.out.println("\n\n");
 
 		//Notify the threads that the program is over, and close the screen
 		Main.going = false;
@@ -86,6 +91,11 @@ public class WorldManager {
 
 		BlockMolds.tick();
 	}
+	
+	protected void updateCameraFrame() {
+		camera_frame.x = world.player.midX - (camera_frame.width / 2);
+		camera_frame.y = world.player.midY - (camera_frame.height / 2);
+	}
 
 	/**
 	 * Delegates the display functionality to the World, and then
@@ -95,7 +105,8 @@ public class WorldManager {
 	 * @param g Graphics object for rendering
 	 */
 	public void display(Graphics g) {
-		world.display(g);
+		updateCameraFrame();
+		world.display(g, camera_frame);
 	}
 
 	/**
@@ -118,21 +129,20 @@ public class WorldManager {
 	public void handleClickAt(int x, int y, int button) {
 		Entity entityFound = null;
 		for (Entity entity: world.middleEntities) {
-			if (entity.getModel().hit_box.get(0).rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
+			if (entity.getModel().hit_box.get(0).rect.contains(x, y)) {
 				entityFound = entity;
 				break;
 			}
 		}
 
 		if (entityFound != null) {
-
 			if (button == 1) {
 				entityFound.push(0, -100, "Input Manager");
 			} else if (button == 3) {
 				removeEntity(entityFound);
 			}
-
 		}
+		
 	}
 
 	protected void gameLoop() {

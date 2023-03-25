@@ -19,8 +19,7 @@ import com.matt.world.WorldManager;
  *  the World class with a rect of the screen position and dimensions, and it will return a list of blocks
  *  and entities that will need to be displayed. Then this class can do the math needed to decide where to
  *  display each thing (probably with a global offset variable for each axis that will be applied to the
- *  items' current position (for blocks this will be a final number, for entities it will only change
- *  with their movement).
+ *  items' current position.
  */
 
 public class UIManager extends JFrame {
@@ -35,7 +34,7 @@ public class UIManager extends JFrame {
 		super();
 
 		//Set the size, location, and title for the screen
-		setSize(O.screenWidth + 7, O.screenHeight + 30);
+		setSize(O.screenWidth+7, O.screenHeight+30);
 		setLocationRelativeTo(null);
 		setTitle(O.screenTitle);
 		setResizable(O.resize);
@@ -44,6 +43,8 @@ public class UIManager extends JFrame {
 		this.world_manager = _world_manager;
 		this.panel = new DisplayPanel(_world_manager, mouse);
 		this.add(panel);
+		
+		world_manager.initializeCameraFrameSize(this.getWidth()-17, this.getHeight()-40);
 	}
 
 	public void addListeners(InputManager input_manager) {
@@ -76,6 +77,7 @@ public class UIManager extends JFrame {
 			world_manager.tickMouseWatcher();
 			try {Thread.sleep(1000 / FPS);} catch (InterruptedException e) {}
 		}
+		
 		System.out.println("[UIManager] Shutting Down");
 		this.dispose();
 	}

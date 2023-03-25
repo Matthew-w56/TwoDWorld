@@ -112,37 +112,34 @@ public class Model {
 		}
 	}
 
-	public void display(Graphics g) {		//Outline The Rectangles in the Model
+	public void display(Graphics g, int cx, int cy) {		//Outline The Rectangles in the Model
 
 		for (int x = 0; x < this.hit_box.size(); x++) {
 			//Set the box color
 			g.setColor(this.display_colors.get(x));
 			//Fill the box in
-			g.fillRect(hit_box.get(x).rect.x, hit_box.get(x).rect.y, hit_box.get(x).rect.width, hit_box.get(x).rect.height);
+			g.fillRect(hit_box.get(x).rect.x - cx, hit_box.get(x).rect.y - cy, hit_box.get(x).rect.width, hit_box.get(x).rect.height);
 			//If the box color was clear, set the border color to clear
-			if (this.display_colors.get(x) == O.colorNull) {
-				g.setColor(O.colorNull);
-			} else {
-				//Otherwise, if the color was not black, set the border color to black
+			if (this.display_colors.get(x) != O.colorNull) {
+				//border the box
 				g.setColor(Color.black);
+				g.drawRect(hit_box.get(x).rect.x - cx, hit_box.get(x).rect.y - cy, hit_box.get(x).rect.width, hit_box.get(x).rect.height);
 			}
-			//border the box
-			g.drawRect(hit_box.get(x).rect.x, hit_box.get(x).rect.y, hit_box.get(x).rect.width, hit_box.get(x).rect.height);
 		}
 
 		if (this.outline || O.entityOutlines) {
 			g.setColor(Color.red);
 			for (ModelBlock block: this.hit_box) {		//Body Boxes
-				g.drawRect(block.rect.x, block.rect.y, block.rect.width, block.rect.height);
+				g.drawRect(block.rect.x - cx, block.rect.y - cy, block.rect.width, block.rect.height);
 			}
 
 			g.setColor(Color.blue);					//Sensor Rects
 			for (ModelBlock block: this.sensors) {
-				g.drawRect(block.rect.x, block.rect.y, block.rect.width, block.rect.height);
+				g.drawRect(block.rect.x - cx, block.rect.y - cy, block.rect.width, block.rect.height);
 			}
 
 			g.setColor(Color.black);		//Total pos box
-			g.drawRect(this.pos[0], this.pos[1], this.width, this.height);
+			g.drawRect(this.pos[0] - cx, this.pos[1] - cy, this.width, this.height);
 		}
 	}
 

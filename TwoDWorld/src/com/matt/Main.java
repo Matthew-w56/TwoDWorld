@@ -30,7 +30,7 @@ import com.matt.world.WorldManager;
  */
 
 /*
- * STEPS TO COMPLETION
+ * STEPS TO COMPLETION  (current step: [ 3 ])
  *
  * 1) Untangle system as needed
  * 2) Get player movement and world working (camera not moving / existing)
@@ -42,7 +42,9 @@ import com.matt.world.WorldManager;
  *
  */
 
+//This is the LATER to do list
 //TODO: Draw grid lines separate from BlockMold.Display.  Do that on a UIManager level
+//TODO: Fix the bug where player can place blocks over another
 
 
 /*
@@ -82,7 +84,7 @@ public class Main {
 		InputManager input_manager = new InputManager(world_manager, ui_manager, mouse);
 
 		ui_manager.addListeners(input_manager);
-
+		
 		//Start up the world
 		world_manager.begin();
 		ui_manager.begin();

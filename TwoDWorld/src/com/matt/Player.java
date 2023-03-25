@@ -34,6 +34,7 @@ public class Player {
 	private final double MAX_SPEED_X = 10.5;
 	private final double GROUND_FRICTION = 1.8;
 	private final double AIR_FRICTION = 0.5;
+	//TODO: Make this global?  Or maybe a variable in the world class (pass in through updateYVelocity())
 	private final double GRAVITY = 0.8;
 
 	//Start up variables for the Player class
@@ -232,12 +233,15 @@ public class Player {
 	 *
 	 * @param g Graphics object passed from JFrame.repaint
 	 */
-	public void display(Graphics g) {
+	public void display(Graphics g, Rectangle camera_frame) {
+		int x = rect.x - camera_frame.x;
+		int y = rect.y - camera_frame.y;
+		
 		//Fill in middle area, then black outline, then display the inventory
 		g.setColor(O.playerColor);
-		g.fillRect(rect.x, rect.y, rect.width, rect.height);
+		g.fillRect(x, y, rect.width, rect.height);
 		g.setColor(Color.black);
-		g.drawRect(rect.x, rect.y, rect.width, rect.height);
+		g.drawRect(x, y, rect.width, rect.height);
 
 		//TODO: Refactor this to remove the need for the additional parameters
 		this.inventory.display(g, selected, fullInv);

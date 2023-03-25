@@ -1,10 +1,10 @@
 package com.matt.entity;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.matt.O;
 import com.matt.block.Block;
 import com.matt.entity.model.Model;
 import com.matt.world.Chunk;
@@ -19,6 +19,8 @@ import com.matt.world.Chunk;
  *
  */
 public abstract class Entity {
+	
+	private final double GRAVITY = 0.8;
 
 	Model model;								//The entity's model
 	public static Random random = new Random();	//Entity-Common random number generator
@@ -42,8 +44,8 @@ public abstract class Entity {
 		is_wandering = true;
 	}
 
-	public void display(Graphics g) {
-		this.model.display(g);
+	public void display(Graphics g, Rectangle camera_frame) {
+		this.model.display(g, camera_frame.x, camera_frame.y);
 	}
 
 	public void push(double x, double y, String source) {
@@ -67,7 +69,7 @@ public abstract class Entity {
 
 	public void updatePhysics() {
 		//Adjust the model's Y Velocity to account for gravity
-		this.model.adjust_yVel(O.gravity, "passive entity (gravity)");
+		this.model.adjust_yVel(GRAVITY, "passive entity (gravity)");
 	}
 
 	public void jump() {

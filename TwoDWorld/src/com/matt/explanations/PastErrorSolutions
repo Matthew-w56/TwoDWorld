@@ -7,7 +7,11 @@ Entities Teleporting when they turn around:
 -Problem: When an entity would turn around, it would generally
  teleport up above the wall they were against.
  
--Solution: Fixing the hitBox area to be symmetrical
+-Solution: Fixing the hitBox area to be symmetrical.  When it is asymmetrical, and the
+ entity turns around, it results in the entity's hitbox being inside of the block.  then,
+ as gravity pulls the entity down, it teleported on top of that block.  Symmetrical
+ hitboxes solve this problem, though just checking to make sure there are no horizontal
+ collisions when the entity turns around would have solved it, too.
 
 --------------------------------------------------------------------------------------
 

@@ -34,7 +34,7 @@ public class O {
 	//--------------------------------------------------------------------------------------------------------------------------
 	static Dimension monitorSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-	public static final String gameTitle = "TwoDWorld";		//Title of the game, used for file nav in AppData
+	//public static final String gameTitle = "TwoDWorld";		//Title of the game, used for file nav in AppData
 
 	//--------------------------------------------------------------------------------------------------------------------------
 	public static final int blockSize = 64;													//Block Size
@@ -47,7 +47,7 @@ public class O {
 	public static final int screenWidth = (int)monitorSize.getWidth() - 200;				//Screen Width
 	public static final int screenHeight = (int)monitorSize.getHeight() - 200;				//Screen Height
 	public static final String screenTitle = "My 2D World v1.2 | Matthew Williams";			//Screen Title
-	public static boolean going = true;														//Going (Program still running)
+	//public static boolean going = true;													//Going (Program still running)
 	public static boolean shouldMove = true;												//Should Move Variable
 
 	public static final int midline = O.chunkSize * (O.chunkRatio-1) / 2;			//Midline from ground to sky average
@@ -63,7 +63,7 @@ public class O {
 
 
 	public static boolean displayBox = true;			//Display the cursor box or not
-	public static boolean chunkLines = false;			//Toggles the black lines marking new chunks
+	public static boolean chunkLines = true;			//Toggles the black lines marking new chunks
 	public static boolean gridLines = false;			//Toggles the colored grid lines on blocks
 	public static boolean resize = false;				//Toggles resizability (Which I've decided IS a word) of the screen
 	public static boolean displayCircle = false;		//Toggles a circle as large as the place distance around the player
@@ -109,7 +109,7 @@ public class O {
 	//public static boolean onGround = false;			//"Footstate" of the player         ________________________
 	//public static double verticalSpeed = 0;			//Current Vertical Speed 		**Gravity And Vertical**
 	//public static final double maximumSpeed = 20.1;	//Maximum Speed						 **Movement Variables**
-	public static final double gravity = 1.2;			//Strength of Gravity
+	//public static final double gravity = 1.2;			//Strength of Gravity
 	//public static final double jumpHeight = 20.0;		//Jump Height
 
 	//--------------------------------------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ public class O {
 
 	public static final int item = 0;
 	public static final int toolItem = 1;
-	public static final int weaponItem = 2;
+	public static final int weaponItem = 2;									//THIS seems like it should be an enum somewhere
 	public static final int placeableItem = 3;
 
 	//--------------------------------------------------------------------------------------------------------------------------
