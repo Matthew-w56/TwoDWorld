@@ -234,14 +234,12 @@ public class Player {
 	 * @param g Graphics object passed from JFrame.repaint
 	 */
 	public void display(Graphics g, Rectangle camera_frame) {
-		int x = rect.x - camera_frame.x;
-		int y = rect.y - camera_frame.y;
 		
 		//Fill in middle area, then black outline, then display the inventory
 		g.setColor(O.playerColor);
-		g.fillRect(x, y, rect.width, rect.height);
+		g.fillRect(O.playerX, O.playerY, rect.width, rect.height);
 		g.setColor(Color.black);
-		g.drawRect(x, y, rect.width, rect.height);
+		g.drawRect(O.playerX, O.playerY, rect.width, rect.height);
 
 		//TODO: Refactor this to remove the need for the additional parameters
 		this.inventory.display(g, selected, fullInv);

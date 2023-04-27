@@ -87,10 +87,7 @@ public class BlockMold {
 	public void display(Graphics g, int durability, int x, int y) {
 		g.setColor(this.color);
 		g.fillRect(x, y, O.blockSize, O.blockSize);
-		if (O.gridLines) {
-			g.setColor(O.blockGridColor);
-			g.drawRect(x, y, O.blockSize, O.blockSize);
-		}
+		
 		if (durability > this.maxDurability) {
 			durability = maxDurability;
 		} else if (durability < this.maxDurability) {

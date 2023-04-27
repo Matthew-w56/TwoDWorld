@@ -1,3 +1,4 @@
+package com.matt;
 /*THIS entire section that is commented out represents the previous MOVE functionality.
 	 * This is left here for future reference as the movement system is re-instated
 	 *
@@ -190,6 +191,32 @@
 			chunk.updateBlocks();
 		}
 	}*/
+
+public class TempClass {
+	
+	public static void main(String[] args) {
+		yourWord("Fish");
+	}
+	
+	public static void yourWord(String word) {
+		String finalWord = word;
+		String[][] additions = {
+				{"ish", "-iness"},
+				{"at", "-atat"},
+				{"ness", "-bess"}
+		};
+		
+		for(int i = 0; i < additions.length; i++) {
+			if (word.endsWith(additions[i][0])) {
+				finalWord += additions[i][1];
+				break;
+			}
+		}
+		
+		System.out.println("Your word was " + word + ". " + finalWord + " is length " + finalWord.length() + ". All done!");
+	}
+	
+}
 
 
 

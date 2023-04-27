@@ -3,12 +3,14 @@ package com.matt.display;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import javax.swing.JPanel;
 
 import com.matt.Mouse;
 import com.matt.O;
+import com.matt.block.Block;
 import com.matt.world.WorldManager;
 
 /**
@@ -29,11 +31,13 @@ public class DisplayPanel  extends JPanel {
 	
 	protected WorldManager world_manager;
 	protected Mouse mouse;
+	protected Rectangle camera_frame;
 
-	public DisplayPanel(WorldManager world, Mouse mouse) {
+	public DisplayPanel(WorldManager world, Mouse mouse, Rectangle camera_frame) {
 		super();
 		this.world_manager = world;
 		this.mouse = mouse;
+		this.camera_frame = camera_frame;
 	}
 
 	@Override
@@ -44,13 +48,20 @@ public class DisplayPanel  extends JPanel {
 		g.fillRect(0, 0, O.screenWidth, O.screenHeight);
 		
 		//draw the world, generally
-		world_manager.display(g);
+		world_manager.displayWorld(g, camera_frame);
 		
-		//Draw the item the mouse is holding, if in inventory and has one
-		if (world_manager.getPlayer().fullInv) displayMouseItem(g, O.MX, O.MY);
+		//Draw first stage of optional things
+		drawOptionalBackgroundMarkings(g);
+		
+		world_manager.displayEntities(g, camera_frame);
 		
 		//Draw any chunk lines, block lines, placement range circle, etc.
 		drawOptionalMarkings(g);
+		
+		//Draw the item the mouse is holding, if in inventory and has one
+		if (world_manager.getPlayer().fullInv) displayMouseItem(g, this.mouse.x, this.mouse.y);
+		
+		
 		
 		//If the tutorial is still active, draw the most recent prompt
 		if (!O.tutProgress[4]) drawTutorialPrompts(g);
@@ -64,19 +75,30 @@ public class DisplayPanel  extends JPanel {
 	
 	private void drawOptionalMarkings(Graphics g) {
 		//If needed, draw the mouse box and outline the block the mouse is touching
-		if (O.displayBox && !world_manager.getPlayer().fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
-			int mouseX = O.MX + O.mouseOffsetX;
-			int mouseY = O.MY + O.mouseOffsetY;
-			g.setColor(Color.black);
-			g.drawRect(mouseX - ((mouseX - O.movementOffsetX) % O.blockSize),
-					   mouseY - ((mouseY - O.movementOffsetY) % O.blockSize), O.blockSize, O.blockSize);
-			g.drawRect(mouseX - 1, mouseY - 1, 2, 2);
-		}
 
 		//Draw the circle around player showing the place distance
 		if (O.displayCircle) {
 			g.drawOval(O.screenWidth/2 - O.placeDistance, O.screenHeight/2 - O.placeDistance,
 					   O.placeDistance * 2, O.placeDistance * 2);
+		}
+	}
+	
+	/**
+	 * Draws any additional markings, outlines, etc. that are meant to go behind
+	 * the player and any entities.  This includes the box around the mouse,
+	 * the outline around the block being focused on, and the chunk and block lines
+	 * @param g
+	 */
+	private void drawOptionalBackgroundMarkings(Graphics g) {
+		//Draw the box around the block that the mouse is touching, and a small box around the mouse pos itself
+		if (O.displayBox && !world_manager.getPlayer().fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
+			g.setColor(Color.black);
+			
+			Block hoveredBlock = world_manager.getBlock(mouseWorldX(), mouseWorldY());
+			if (hoveredBlock == null) return;
+			Rectangle hbRect = hoveredBlock.rect;
+			g.drawRect(hbRect.x - camera_frame.x, hbRect.y - camera_frame.y, O.blockSize, O.blockSize);
+			g.drawRect(mouse.x - 1, mouse.y - 1, 2, 2);
 		}
 	}
 	
@@ -131,5 +153,13 @@ public class DisplayPanel  extends JPanel {
 				g.drawString("" + mouse.getCount(), X - 6, (Y-O.backItemSize/2));
 			}
 		}
+	}
+	
+	private int mouseWorldX() {
+		return camera_frame.x + mouse.x;
+	}
+	
+	private int mouseWorldY() {
+		return camera_frame.y + mouse.y;
 	}
 }

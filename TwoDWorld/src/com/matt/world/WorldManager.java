@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ConcurrentModificationException;
 
 import com.matt.Main;
+import com.matt.Mouse;
 import com.matt.O;
 import com.matt.Player;
 import com.matt.block.Block;
@@ -23,27 +24,17 @@ public class WorldManager {
 			new Rectangle(O.screenWidth, 0, 1, O.screenHeight)};
 
 	protected static final int TICKS_PER_SECOND = 60;
-	
-	//A bit of a violation to the single responsibility rule.  But I feel like
-	//	this is the best way to do it (efficient). TODO: Look into this structure later
-	protected Rectangle camera_frame;
 
 	protected World world;
-	protected int mouseX, mouseY;
+	protected Mouse mouse;
 
-	public WorldManager() {
+	public WorldManager(Mouse mouse) {
 		world = new World();
-		mouseX = -1;
-		mouseY = -1;
-		camera_frame = new Rectangle(-1000, -1000, -1, -1);
-	}
-	
-	public void initializeCameraFrameSize(int width, int height) {
-		camera_frame.width = width;
-		camera_frame.height = height;
+		this.mouse = mouse;
 	}
 
 	public void generateNewWorld() {
+		System.out.println("[World Manager] Generating World");
 		world.generate();
 
 		for (Chunk chunk: world.chunkListMiddle) {
@@ -68,35 +59,6 @@ public class WorldManager {
 		System.out.println("[World] Shutting Down");
 	}
 
-	public void tickMouseWatcher() {
-		if (O.mouseLeftDown) {
-
-			if (!world.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
-				try {
-					Block hitB = world.getBlock(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY);
-					breakAt(hitB);
-				} catch (IndexOutOfBoundsException p) {}
-			}
-
-		} else if (O.mouseRightDown) {
-
-			if (!world.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {
-				try {
-					Block hitB = world.getBlock(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY);
-					activate(hitB);
-				} catch (IndexOutOfBoundsException p) {}
-			}
-
-		}
-
-		BlockMolds.tick();
-	}
-	
-	protected void updateCameraFrame() {
-		camera_frame.x = world.player.midX - (camera_frame.width / 2);
-		camera_frame.y = world.player.midY - (camera_frame.height / 2);
-	}
-
 	/**
 	 * Delegates the display functionality to the World, and then
 	 * will eventually pick up the menu and inventory display
@@ -104,9 +66,12 @@ public class WorldManager {
 	 *
 	 * @param g Graphics object for rendering
 	 */
-	public void display(Graphics g) {
-		updateCameraFrame();
-		world.display(g, camera_frame);
+	public void displayWorld(Graphics g, Rectangle camera_frame) {
+		world.displayWorld(g, camera_frame);
+	}
+	
+	public void displayEntities(Graphics g, Rectangle camera_frame) {
+		world.displayEntities(g, camera_frame);
 	}
 
 	/**
@@ -115,6 +80,16 @@ public class WorldManager {
 	public Player getPlayer() {
 		return world.player;
 	}
+	
+	public Mouse getMouse() {
+		return mouse;
+	}
+	
+	public Block getBlock(int x, int y) {
+		return world.getBlock(x, y);
+	}
+	
+	
 
 	/**
 	 * Removes the given entity, if it exists, from the
@@ -124,25 +99,6 @@ public class WorldManager {
 	 */
 	protected void removeEntity(Entity e) {
 		world.middleEntities.remove(e);
-	}
-
-	public void handleClickAt(int x, int y, int button) {
-		Entity entityFound = null;
-		for (Entity entity: world.middleEntities) {
-			if (entity.getModel().hit_box.get(0).rect.contains(x, y)) {
-				entityFound = entity;
-				break;
-			}
-		}
-
-		if (entityFound != null) {
-			if (button == 1) {
-				entityFound.push(0, -100, "Input Manager");
-			} else if (button == 3) {
-				removeEntity(entityFound);
-			}
-		}
-		
 	}
 
 	protected void gameLoop() {
@@ -170,15 +126,12 @@ public class WorldManager {
 			if (O.shouldMove && !world.player.fullInv && !O.menu.inMenu && !O.creationWindow.visible) {    //If you Should Move
 				try {
 					//System.out.println("----------------[New Frame]----------------");
-
-
+					
 					//Move all the entities
 					world.handleEntities();
 
 					//Move the player
 					world.handlePlayer();
-
-
 
 					// -------------------[ End Main Loop Section ]---------------------------
 				} catch (ConcurrentModificationException e) {}
@@ -215,33 +168,42 @@ public class WorldManager {
 	 * @param b			Block to be activated on
 	 * @param problem	To mess up things (so I can see where this is called from)
 	 */
-	protected void activate(Block b) {
-		boolean entity = true;
+	public void activate(int x, int y) {
+		
+		Block block = world.getBlock(x, y);
+		Item holding = world.player.getSelectedItem();
+		
 		for (Entity e: world.middleEntities) {
-			if (e.getModel().hit_box.get(0).rect.intersects(b.rect)) {
-				entity = false;
+			if (e.getModel().hit_box.get(0).rect.intersects(block.rect)) {
+				//This being run means that the block being placed would collide
+				//with an entity of the world.  So this cancels that.
+				return;
 			}
 		}
-		Item holding = world.player.getSelectedItem();
-		int distance = (int)Math.hypot(O.MX - world.player.midX, O.MY - world.player.midY);
+		
+		int distance = (int)Math.hypot(x - world.player.midX, y - world.player.midY);
 		if (holding != null && holding.getTypeId() == O.placeableItem &&
-				b.mold.getId() != holding.getBlockMold().getId() && distance <= O.placeDistance &&
-				entity && !b.rect.intersects(world.player.rect)) {
+				block.mold.getId() != holding.getBlockMold().getId() && distance <= O.placeDistance &&
+				!block.rect.intersects(world.player.rect)) {
 			//Place the block
-			b.setTo(holding.getBlockMold());
+			block.setTo(holding.getBlockMold());
 			world.player.takeBySlot(world.player.selected, 1);
 			if (O.tutProgress[2]) {O.tutProgress[3] = true;}
 		}
 	}
 
-	protected void breakAt(Block block) {
-		int distance = (int)Math.hypot(O.MX - world.player.midX, O.MY - world.player.midY);
+	public void breakAt(int x, int y) {
+		Block block = world.getBlock(x, y);
+		int distance = (int)Math.hypot(x - world.player.midX, y - world.player.midY);
 		if (distance <= O.placeDistance) {
+			
 			Item holding = world.player.getSelectedItem();
+			
 			if (holding == null || holding.getTypeId() != O.toolItem) {
 				if (block.mold.getHarvestLevel() == 0) {
 					hitBlockWithTool(block, Items.hand);
 				}
+				
 			//TODO: Could situations like this be solved with a if (holding is ItemTool) statement?  Java syntax?
 			} else if (holding.getTypeId() == O.toolItem) {
 				ItemTool tool = (ItemTool)holding;

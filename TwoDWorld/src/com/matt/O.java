@@ -58,8 +58,8 @@ public class O {
 																							//vertical height you start with)
 	public static int chunkY = chunkOffsetY;			//Current Y pos of the chunks
 
-	public static int movementOffsetX = 0;				//Amount moved in X direction (Effectively) % block_size    				 ___________________
-	public static int movementOffsetY = 0;				//Amount moved in Y direction (Effectively)	% block_size					 **World Variables**
+	//public static int movementOffsetX = 0;				//Amount moved in X direction (Effectively) % block_size    				 ___________________
+	//public static int movementOffsetY = 0;				//Amount moved in Y direction (Effectively)	% block_size					 **World Variables**
 
 
 	public static boolean displayBox = true;			//Display the cursor box or not
@@ -89,8 +89,8 @@ public class O {
 	public static boolean PD = false;									//Player Down
 	public static boolean LSHIFT = false;								//Holding the shift key
 
-	public static int playerX = (screenWidth - playerWidth) / 2;		//Player Position X
-	public static int playerY = (O.screenHeight - O.playerHeight) / 2;	//Player Position Y
+	public static int playerX = (screenWidth - playerWidth) / 2 - 4;		//Player Position X
+	public static int playerY = (O.screenHeight - O.playerHeight) / 2 - 5;	//Player Position Y
 
 	//--------------------------------------------------------------------------------------------------------------------------
 
@@ -114,11 +114,11 @@ public class O {
 
 	//--------------------------------------------------------------------------------------------------------------------------
 														//                                      ___________________
-	public static int MX = 0;							//Mouse X Pos							**Mouse Variables**
-	public static int MY = 0;							//Mouse Y Pos, referred to in my head as "Oh, my!" (O.MY)
-	public static final int distanceUnit = O.blockSize;	//The unit of distance, in pixels, for the x and y position (only affects visual affect)
-	public static final int mouseOffsetX = -9;			//Mouse Offset X
-	public static final int mouseOffsetY = -32;			//Mouse Offset Y
+	//public static int MX = 0;							//Mouse X Pos							**Mouse Variables**
+	//public static int MY = 0;							//Mouse Y Pos, referred to in my head as "Oh, my!" (O.MY)
+	//NEVER USED public static final int distanceUnit = O.blockSize;	//The unit of distance, in pixels, for the x and y position (only affects visual affect)
+	//public static final int mouseOffsetX = -9;			//Mouse Offset X
+	//public static final int mouseOffsetY = -32;			//Mouse Offset Y
 
 	//--------------------------------------------------------------------------------------------------------------------------
 

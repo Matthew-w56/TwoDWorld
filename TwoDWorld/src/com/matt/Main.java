@@ -43,20 +43,27 @@ import com.matt.world.WorldManager;
  */
 
 //This is the LATER to do list
-//TODO: Draw grid lines separate from BlockMold.Display.  Do that on a UIManager level
 //TODO: Fix the bug where player can place blocks over another
 
 
 /*
- * see why blocks can't be placed,
- * and once that is fixed
- *
- * The next major thing to do is to change all rect.x/y being visual coordinates (down is positive)
- * to world coordinates (down is negative), and have the UIManager get the info it needs from the
- * worldManager in order to draw the world as it should be.  Then, we can move on to having the
- * "camera" move with the player.  Once that is in place, we need to get the world / chunk system
- * to update and activate where it needs to.
- *
+ * 
+ * NOW: ----------------------------------------------------------------------
+ * 
+ * I am currently debugging the following issue: The mouse does not
+ * correctly highlight the block that it is touching.  Something between
+ * the mouse camera_frame and the offsets and whatnot are not accurate, and
+ * I think it has something to do with the way the world is instantiated.  
+ * It adjusts between blocks as the player moves correctly, but it starts
+ * off in the wrong position in the y direction.  Start game and you'll see
+ * what the problem is.  Press 'i' on keyboard to see player and camera pos
+ * (in world coordinates)
+ * 
+ * Here's the plan.  Right now, click events are going straight from
+ * the screen pos into the world object.  Pass those events to-
+ * world_manager, then use that to do the same things, but accounting
+ * for camera_frame.
+ *------------------------------------------------------------------------------
  */
 
 /**
@@ -69,30 +76,43 @@ public class Main {
 	public static boolean going = true;
 
 	public static void main(String[] args) {
-
-		//Print out the start of generation, and generate
-		System.out.println("[Main] Generating World..");
-		WorldManager world_manager = new WorldManager();
-		world_manager.generateNewWorld();
-
+		
+		//Steps for the Main Method:
+		// 0) Make the Mouse Object
+		// 1) Create the world (manager) and generate the chunks in the world
+		// 2) Create the manager for all the UI stuff
+		// 3) Link the blocks with the items
+		// 4) Create the manager for any user input
+		// 5) Give the UI manager the Input manager as a listener for events
+		// 6) Start the constant loops that manage the game
+		// 7) Kick off the in-game portion of the console log
+		
+		// -----[ Step 0 ]-----
 		Mouse mouse = new Mouse();
-
+		
+		// -----[ Step 1 ]-----
+		WorldManager world_manager = new WorldManager(mouse);
+		world_manager.generateNewWorld();
+		
+		// -----[ Step 2 ]-----
 		UIManager ui_manager = new UIManager(world_manager, mouse);
-		//TODO: Does this have to happen?  And does it have to be here?
+		
+		// -----[ Step 3 ]-----
 		BlockMolds.linkWithItems();
 
+		// -----[ Step 4 ]-----
 		InputManager input_manager = new InputManager(world_manager, ui_manager, mouse);
-
+		
+		// -----[ Step 5 ]-----
 		ui_manager.addListeners(input_manager);
 		
-		//Start up the world
+		// -----[ Step 6 ]-----
 		world_manager.begin();
 		ui_manager.begin();
-
-		//Wait a second, then print the game log indicator
+		
+		// -----[ Step 7 ]-----
 		try {Thread.sleep(1000);} catch (InterruptedException e) {}
-		System.out.println("\n\n");
-		System.out.println("-----[In Game Log]-----");
+		System.out.println("\n\n-----[In Game Log]-----");
 	}
 
 

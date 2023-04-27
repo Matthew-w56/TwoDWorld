@@ -1,21 +1,31 @@
 package com.matt;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
 import com.matt.inventory.Slot;
 import com.matt.item.Item;
+import com.matt.menu.MenuButton;
+import com.matt.menu.Screens;
 
 
 /**
- * Right now, this class only handles what item the mouse is holding in
- * an inventory setting.  Any mouse listening happens in UIManager.java,
- * and the events are distributed from there.
- *
+ * This class handles some methods that deal with exchanges between
+ * the mouse and a slot in terms of item sharing and stacking.  It also
+ * acts as a MouseMotionListener, which allows it to update it's current
+ * screen position (x and y) whenever the mouse is moved.
+ * 
  * @author Matthew Williams
  *
  */
-public class Mouse {
+public class Mouse implements MouseMotionListener {
+	
+	private static final int MouseOffsetX = -9;
+	private static final int MouseOffsetY = -32;
 
 	public int count;
 	public Item item;
+	public int x = 0, y = 0;
 
 	public Mouse () {
 		this.item = null;
@@ -120,6 +130,33 @@ public class Mouse {
 			item = slot.getItem();
 			slot.decItem(transfer);
 		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		//Move the positions of the mouse
+		this.x = e.getX() + MouseOffsetX;
+		this.y = e.getY() + MouseOffsetY;
+	}
+	
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		//Move the positions of the mouse
+		this.x = e.getX() + MouseOffsetX;
+		this.y = e.getY() + MouseOffsetY;
+		
+		//TODO: Resolve this reference
+		//Highlight the buttons on the menu that the mouse is touching, if the player is in the menu
+		if (O.menu.inMenu && Screens.activeScreen != null) {
+			for (MenuButton b: Screens.activeScreen.buttons) {
+				if (b.rect.contains(this.x, this.y)) {
+					b.current_color = b.selected_color;
+				} else {
+					b.current_color = b.primary_color;
+				}
+			}
+		}
+
 	}
 
 }

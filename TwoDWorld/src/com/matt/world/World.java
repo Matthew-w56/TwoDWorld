@@ -19,7 +19,7 @@ import com.matt.entity.entities.Pig;
 import com.matt.item.Item;
 import com.matt.item.Items;
 
-//TODO: BIG ONE!  All chunks in a continuous list, and indicies indicating which
+//TODO: BIG ONE!  Make all chunks in a continuous list, and indicies indicating which
 //chunks are "active" or not.  No moving, no staching, just indicators
 
 /**
@@ -141,45 +141,30 @@ public class World {
 		//This method does not require the blocks to register as collision blocks to check them
 		//(Used mainly by the mouse for placing and breaking things)
 		
+		//TODO: This can just become math to decide the index of what
+		//		block to return, none of this other stuff needed.  Change
+		//		this please.
+		
 		//Loop through each chunk checking for collision
 		try {
-			Chunk chunk;
 			for (int i = 0; i < chunkListMiddle.size(); i++) {
-				chunk = chunkListMiddle.get(i);
-				if (chunk.rect.contains(x, y)) {
+				Chunk chunk = chunkListMiddle.get(i);
+				
+				//If the mouse is within the x bounds of the chunk
+				if (chunk.rect.x < x && x < (chunk.rect.x + chunk.rect.width)) {
 					
-					//Mathmatically find the area in the chunk you need to search
-					int start = (int)(x - chunk.rect.x) / O.blockSize;
-					int length = 2 + (O.playerWidth / O.blockSize);
-					int startY = (int)(y - chunk.rect.y) / O.blockSize;
-					int height = 2 + (O.playerHeight / O.blockSize);
+					//TODO: Will be able to calculate chunk rather than loop once they are all..
+					//  ..in the same list, rather than spread out.
 					
-					//Logically check to make sure the numbers are in the boundaries
-					if (start < 0) {
-						length += start;
-						start = 0;
-					} else if (start + length >= O.chunkSize) {
-						length = O.chunkSize - start;
-					}
-					if (startY < 0) {
-						height += startY;
-						startY = 0;
-					} else if (startY + height >= O.chunkSize * O.chunkRatio) {
-						height = O.chunkSize * O.chunkRatio - startY;
-					}
-					
-					//Loop through selected regions and check for collisions
-					for (int c = start; c < start + length; c++) {
-						for (int r = startY; r < startY + height; r++) {
-							if (chunk.blocks[r][c] != null && chunk.blocks[r][c].getRect() != null
-								&& chunk.blocks[r][c].getRect().contains(x, y)) {
-								return chunk.blocks[r][c];
-							}
-						}
-					}
+					//Calculate the position in block terms, and return that block
+					return chunk.blocks
+							[(y - chunk.rect.y) / O.blockSize]
+							[(x - chunk.rect.x) / O.blockSize];
 				}
 			}
-		} catch (ConcurrentModificationException e) { }
+		} catch (ConcurrentModificationException e) {
+			System.out.println("[World.getBlock(x,y)] Caught a CME and Died!");
+		}
 		
 		return null;
 	}
@@ -270,9 +255,6 @@ public class World {
 		}
 		
 		player.rect.x = testRect.x;
-		
-		//Somewhere in UIManager might be the better place for this
-		O.movementOffsetX = player.rect.x % O.blockSize;
 	}
 	
 	protected void movePlayerY() {
@@ -493,11 +475,6 @@ public class World {
 		}
 	}
 	
-	public void reverseList(ArrayList<Chunk> chunkList) {
-		//Reverse the list, used in the CREATE method
-		Collections.reverse(chunkList);
-	}
-	
 	public void create() {
 		O.shouldMove = false;
 		
@@ -512,7 +489,7 @@ public class World {
 			lastChunk = newChunk;
 		}
 		//Since the list is reversed in how it is refered, it must be reversed here
-		reverseList(chunkListLeft);
+		Collections.reverse(chunkListLeft);
 		//Set the last chunk as the first to be made (now at the front of the line after reversing)
 		lastChunk = chunkListLeft.get(chunkListLeft.size()-1);
 		
@@ -535,14 +512,14 @@ public class World {
 		}
 		//Same as the left chunk list, the right chunk list must be reversed
 		//So that it can be refered to in the correct order during movement
-		reverseList(chunkListRight);
+		Collections.reverse(chunkListRight);
 		
 		//Print the end of creation, and toggle movement to start again
 		O.shouldMove = true;
 		System.out.println("[ChunkManager.create] Chunk Creation Finished");
 	}
-
-	public void display(Graphics g, Rectangle camera_frame) {
+	
+	public void displayWorld(Graphics g, Rectangle camera_frame) {
 		
 		for (Chunk chunk: chunkListMiddle) {
 			
@@ -556,6 +533,9 @@ public class World {
 			if (startRow < 0) startRow = 0;
 			int endRow = (camera_frame.y + camera_frame.height - chunk.rect.y) / O.blockSize + 1;
 			if (endRow >= (O.chunkSize * O.chunkRatio)) endRow = (O.chunkSize * O.chunkRatio);
+			//Assumption: unlike the column calculations above, the case will never arise that
+			//The screen does not display some of a given chunk vertically (can't go above or
+			//below the chunks)
 			
 			for (int r = startRow; r < endRow; r++) {
 				for (int c = startCol; c < endCol; c++) {
@@ -565,6 +545,21 @@ public class World {
 						b.mold.display(g, b.durability, b.rect.x - camera_frame.x, b.rect.y - camera_frame.y);
 					}
 				}
+				//Horizontal lines for block grid
+				if (O.gridLines) {
+					g.setColor(O.blockGridColor);
+					int depth = chunk.rect.y + (r * O.blockSize) - camera_frame.y;
+					g.drawLine(chunk.rect.x - camera_frame.x, depth, chunk.rect.x + chunk.rect.width - camera_frame.x, depth);
+				}
+			}
+			
+			//Vertical lines for block grid
+			if (O.gridLines) {
+				g.setColor(O.blockGridColor);
+				for (int c = startCol; c < endCol; c++) {
+					int width = chunk.rect.x + (c * O.blockSize) - camera_frame.x;
+					g.drawLine(width, chunk.rect.y - camera_frame.y, width, chunk.rect.height - camera_frame.y);
+				}
 			}
 			
 			if (O.chunkLines) {
@@ -572,7 +567,9 @@ public class World {
 				g.drawLine(chunk.rect.x - camera_frame.x, chunk.rect.y - camera_frame.y, chunk.rect.x - camera_frame.x, chunk.rect.y + chunk.rect.height - camera_frame.y);
 			}
 		}
-		
+	}
+	
+	public void displayEntities(Graphics g, Rectangle camera_frame) {
 		//Draw Entities
 		for (int i = 0; i < middleEntities.size(); i++) {
 			try {

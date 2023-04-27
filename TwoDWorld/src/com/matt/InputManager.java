@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
@@ -19,7 +18,7 @@ import com.matt.menu.MenuButton;
 import com.matt.menu.Screens;
 import com.matt.world.WorldManager;
 
-public class InputManager implements WindowListener, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
+public class InputManager implements WindowListener, MouseListener, MouseWheelListener, KeyListener {
 
 	WorldManager world_manager;
 	UIManager ui_manager;
@@ -109,12 +108,6 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			O.blockSetRect = 0;
 			break;
 
-		case KeyEvent.VK_K:
-			System.out.println("[MyPanel] Set Pos: " + O.blockSetPos);
-			System.out.println("[MyPanel] Set Rect: " + O.blockSetRect);
-			System.out.println("[MyPanel] Total: " + O.blockSetPos + O.blockSetRect);
-			break;
-
 		case KeyEvent.VK_C:
 			//Open the creation window
 			if (!O.menu.inMenu) {
@@ -128,6 +121,11 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			O.entityOutlines = !O.entityOutlines;
 			O.gridLines = !O.gridLines;
 			O.chunkLines = !O.chunkLines;
+			break;
+			
+			//TODO: This case can be removed after debugging
+		case KeyEvent.VK_I:
+			System.out.println("[InputManager] Player Pos: (" + world_manager.getPlayer().rect.x + ", " + world_manager.getPlayer().rect.y + ")");
 			break;
 
 		default:
@@ -178,15 +176,6 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 
 
 
-
-	//FROM MOUSE.java
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		//Move the positions of the mouse
-		O.MX = e.getX();
-		O.MY = e.getY();
-	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {}
 
@@ -213,14 +202,14 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			Slot found_slot = null;
 			if (e.getButton() == 1) {
 				for (InventorySlot hslot: player.inventory.hotbar) {
-					if (hslot.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
+					if (hslot.rect.contains(this.mouse.x, this.mouse.y)) {
 						found_slot = hslot;
 					}
 				}
 				if (found_slot == null) {
 					for (InventoryBackslot[] brow: player.inventory.backInv) {
 						for (InventoryBackslot bslot: brow) {
-							if (bslot.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
+							if (bslot.rect.contains(this.mouse.x, this.mouse.y)) {
 								found_slot = bslot;
 							}
 						}
@@ -237,14 +226,14 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 
 			} else if (e.getButton() == 3) {
 				for (InventorySlot slot: player.inventory.hotbar) {
-					if (slot.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
+					if (slot.rect.contains(this.mouse.x, this.mouse.y)) {
 						found_slot = slot;
 					}
 				}
 				if (found_slot == null) {
 					for (InventoryBackslot[] row: player.inventory.backInv) {
 						for (InventoryBackslot slot: row) {
-							if (slot.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
+							if (slot.rect.contains(this.mouse.x, this.mouse.y)) {
 								found_slot = slot;
 							}
 						}
@@ -264,7 +253,7 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			if (e.getButton() == 1) {		//Left Click in Menu
 				if (Screens.activeScreen != null) {//If you are in a menu screen
 					for (MenuButton b: Screens.activeScreen.buttons) {//For every button on the screen
-						if (b.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {		//If the button is touching the mouse
+						if (b.rect.contains(this.mouse.x, this.mouse.y)) {		//If the button is touching the mouse
 							b.activate();							//Activate the button
 						}
 					}
@@ -276,7 +265,7 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			if (e.getButton() == 1) {			//Left Click   in  Creation Window
 				CreationSlot endSlot = null;
 				for (CreationSlot slot : O.creationWindow.slots) {
-					if (slot.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY))  {
+					if (slot.rect.contains(this.mouse.x, this.mouse.y))  {
 						endSlot = slot;
 					}
 				}
@@ -284,10 +273,8 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			}
 
 		} else {
-			//Middle Click
+			//If the click was a middle click
 			if (e.getButton() == 2) O.displayBox = !O.displayBox; //Toggle if the box for the cursor is displayed or not
-			//Pass clicks on to the world. This is a quick click, not a held button.  That gets taken care of elsewhere.
-			world_manager.handleClickAt(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY, e.getButton());
 		}
 	}
 
@@ -297,21 +284,11 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			//If the rotation is negative
 			if (e.getWheelRotation() < 0) {
 				//Move the selected slot
-				player.selected -= 1;
-				//If the slot went over the edge
-				if (player.selected < 0) {
-					//Place it on the other side
-					player.selected = O.hotCount-1;
-				}
+				player.selected = (player.selected + O.hotCount - 1) % O.hotCount;
 			//If the rotation is positive
 			} else if (e.getWheelRotation() > 0) {
 				//Move the selected slot
-				player.selected += 1;
-				//If the slot went over the edge
-				if (player.selected > O.hotCount-1) {
-					//Place it on the other side
-					player.selected = 0;
-				}
+				player.selected  = (player.selected + 1) % O.hotCount;
 			}
 		}
 	}
@@ -327,25 +304,5 @@ public class InputManager implements WindowListener, MouseMotionListener, MouseL
 			break;
 		}
 	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		//Move the positions of the mouse
-		O.MX = e.getX();
-		O.MY = e.getY();
-
-		//Highlight the buttons on the menu that the mouse is touching, if the player is in the menu
-		if (O.menu.inMenu && Screens.activeScreen != null) {
-			for (MenuButton b: Screens.activeScreen.buttons) {
-				if (b.rect.contains(O.MX + O.mouseOffsetX, O.MY + O.mouseOffsetY)) {
-					b.current_color = b.selected_color;
-				} else {
-					b.current_color = b.primary_color;
-				}
-			}
-		}
-
-	}
-
 
 }
