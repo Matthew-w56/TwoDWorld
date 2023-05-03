@@ -18,6 +18,8 @@ import com.matt.entity.Entity;
  *
  */
 public class Chunk {
+	//TODO: Audit which of these fields are actually needed.
+	
 	//Create the chunk variables
 	public Rectangle rect;
 	public ArrayList<int[]> reqLeft, reqRight;
@@ -27,6 +29,7 @@ public class Chunk {
 	Chunk chunkBefore;
 	ArrayList<Block> reqLeftBlocks, reqRightBlocks;
 	public int endPosL, endPosR, treeOffset, s;
+	protected int index;
 	public boolean done;
 
 	public Chunk(int x, int y, int s, Chunk ch) {
@@ -39,15 +42,12 @@ public class Chunk {
 		reqLeftBlocks = new ArrayList<>();
 		reqRightBlocks = new ArrayList<>();
 		this.s = s;
+		if (s == 1) s++;
 		this.endPosL = O.midline;
 		this.endPosR = O.midline;
+		
 		this.fill();
-		if (s == 1) s++;
 		this.create(s, ch);
-	}
-
-	public Chunk() {
-		this.rect = new Rectangle(-O.chunkWidth, -O.chunkHeight, O.chunkWidth, O.chunkHeight);
 	}
 
 	public void fill() {
@@ -102,8 +102,20 @@ public class Chunk {
 	public void addEntity(Entity e) {
 		this.entities.add(e);
 	}
+	
+	/**
+	 * Returns the index that this chunk should be stored at
+	 * in the world's Bidirectional Array List.  It is
+	 * based off of the previous chunk's index.
+	 * 
+	 * @return Index of this chunk
+	 */
+	public int getIndex() {
+		return this.index;
+	}
 
-	public void setDone(boolean b) {
+	public void setDone(boolean b, int index) {
 		this.done = b;
+		this.index = index;
 	}
 }

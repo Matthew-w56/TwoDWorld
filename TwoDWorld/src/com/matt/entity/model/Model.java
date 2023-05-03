@@ -31,30 +31,21 @@ public class Model {
 	public ArrayList<ModelBlock> hit_box, sensors;
 	public ArrayList<Color> display_colors;
 
-	public Model(int x, int y) {
-		this.hit_box = new ArrayList<>();	//Start up a list of hit_box model blocks
-		this.sensors = new ArrayList<>(); //Start up a list of sensor model blocks
-		this.display_colors = new ArrayList<>();
-
-		this.outline = false;
-		this.speed = 0;					//Set the speed as 0; will be overridden with subclasses
-		this.pos = new int[] {x, y};	//Set the pos as the inputted x and y
-		this.direction = 1;				//Set the direction to 1 (facing right)
-		this.yVel = 0;					//Set yVelocity as 0
-	}
-
 	public Model(int x, int y, boolean outline) {
 		this.hit_box = new ArrayList<>();	//Start up a list of hit_box model blocks
-		this.sensors = new ArrayList<>(); //Start up a list of sensor model blocks
+		this.sensors = new ArrayList<>(); 	//Start up a list of sensor model blocks
 		this.display_colors = new ArrayList<>();
 
 		this.outline = outline;
-		this.speed = 0;					//Set the speed as 0; will be overridden with subclasses
-		this.pos = new int[] {x, y};	//Set the pos as the inputted x and y
-		this.direction = 1;				//Set the direction to 1 (facing right)
-		this.yVel = 0;					//Set yVelocity as 0
+		this.speed = 0;						//Set the speed as 0; will be overridden with subclasses
+		this.pos = new int[] {x, y};		//Set the pos as the inputted x and y
+		this.direction = 1;					//Set the direction to 1 (facing right)
+		this.yVel = 0;						//Set yVelocity as 0
 	}
-
+	
+	public Model(int x, int y) { this(x, y, false); }
+	
+	
 	public void print_pos() {
 		System.out.println("[Model] Current Position: (" + this.pos[0] + ", " + this.pos[1] + ")");
 	}

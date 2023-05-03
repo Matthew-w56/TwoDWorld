@@ -1,6 +1,8 @@
 package com.matt.display;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -58,7 +60,9 @@ public class UIManager extends JFrame {
 		this.mouse = mouse;
 		this.add(panel);
 		
-		//world_manager.initializeCameraFrameSize(this.getWidth()-17, this.getHeight()-40);
+		//Print out the screen resolution
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		System.out.println("[UIManager.constructor] Screen Resolution: " + (int)screenSize.getWidth() + ", " + (int)screenSize.getHeight());
 	}
 
 	public void addListeners(InputManager input_manager) {

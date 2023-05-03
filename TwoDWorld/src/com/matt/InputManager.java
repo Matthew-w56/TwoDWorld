@@ -154,36 +154,21 @@ public class InputManager implements WindowListener, MouseListener, MouseWheelLi
 		world_manager.close();
 	}
 
-	//These all just print their event right now, I'm curious when each is called
+	//windowIconified is when it gets minimized to the task bar.  Activated is when it is focused on.
 	@Override public void windowClosed(WindowEvent e)		{ System.out.println("[UIManager] Window Closed"); }
-	@Override public void windowIconified(WindowEvent e)	{ System.out.println("[UIManager] Window Iconified"); }
-	@Override public void windowDeiconified(WindowEvent e) 	{ System.out.println("[UIManager] Window Deiconified"); }
-	@Override public void windowActivated(WindowEvent e) 	{ System.out.println("[UIManager] Window Activated"); }
-	@Override public void windowDeactivated(WindowEvent e) 	{ System.out.println("[UIManager] Window Deactivated"); }
-	@Override public void windowOpened(WindowEvent e)		{ System.out.println("[UIManager] Window Opened"); }
-
-	//@Override public void mouseWheelMoved(MouseWheelEvent e) { }
-	//@Override public void mouseClicked(MouseEvent e) { }
-	//@Override public void mousePressed(MouseEvent e) { }
-	//@Override public void mouseReleased(MouseEvent e) { }
-	//@Override public void mouseEntered(MouseEvent e) { }
-	//@Override public void mouseExited(MouseEvent e) { }
-	//@Override public void mouseDragged(MouseEvent e) { }
-	//@Override public void mouseMoved(MouseEvent e) { }
+	@Override public void windowIconified(WindowEvent e)	{ world_manager.getPlayer().toggleInv(); }
+	@Override public void windowDeiconified(WindowEvent e) 	{  }
+	@Override public void windowActivated(WindowEvent e) 	{  }
+	@Override public void windowDeactivated(WindowEvent e) 	{ world_manager.getPlayer().toggleInv(); }
+	@Override public void windowOpened(WindowEvent e)		{ /*Calls when window is first started and opened*/ }
 
 
 
 
 
-
-	@Override
-	public void mouseClicked(MouseEvent e) {}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
+	@Override public void mouseClicked(MouseEvent e) {}
+	@Override public void mouseEntered(MouseEvent e) {}
+	@Override public void mouseExited(MouseEvent e) {}
 
 	@Override
 	public void mousePressed(MouseEvent e) {

@@ -31,7 +31,8 @@ public class WorldGenerator {
 	private static final int treeChance = 10;			//Chance for a tree to show up (1/tc)
 	private static final int shrubChance = 3;			//Chance for a shrub to show (1/sc)
 	private static final int cliffChance = 200;			//Chance for a cliff to appear (1/cc)
-
+	
+	//for s, 0 is left of chunk2, 2 is right of chunk2
 	public static void create(Chunk chunk, int s, Chunk chunk2) {
 		setGroundLine(chunk, s, chunk2);	//Decide where the sky will meet the ground
 		addGround(chunk);					//Fill in the dirt and rocks and sky accordingly
@@ -41,8 +42,18 @@ public class WorldGenerator {
 			//Reconsile the chunk's Req lists, and the neighboring
 			//chunk's Req lists, if there is another chunk
 			reconsile(chunk, s, chunk2);
+			
+			int newChunkIndex;
+			if (s == 0) newChunkIndex = chunk2.index - 1;
+			else newChunkIndex = chunk2.index + 1;
+			
+			//Mark this chunk as done and give it its index
+			chunk.setDone(true, newChunkIndex);
+		} else {
+			//Mark this chunk as done and mark it as the first chunk (index of 0)
+			chunk.setDone(true, 0);
 		}
-		chunk.setDone(true);				//Mark this chunk as done
+		
 	}
 
 	public static void setGroundLine(Chunk chunk, int s, Chunk chunk2) {
@@ -227,7 +238,5 @@ public class WorldGenerator {
 				chunk.reqLeftBlocks.clear();
 			}
 		} catch (ConcurrentModificationException e) {}
-
-		chunk.setDone(true);
 	}
 }

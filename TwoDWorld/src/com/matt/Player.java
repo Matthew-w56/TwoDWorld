@@ -46,9 +46,11 @@ public class Player {
 	public int selected, midX, midY, direction;
 	public boolean fullInv = false, onGround = false;
 	public boolean keyRight, keyLeft, keyUp, keyDown, keyLShift;
+	
+	private final int startX = 720, startY = 2900;
 
 	public Player() {
-		rect = new Rectangle(O.playerX, O.playerY, O.playerWidth, O.playerHeight);
+		rect = new Rectangle(startX, startY, O.playerWidth, O.playerHeight);
 		this.inventory = new Inventory();
 
 		selected = 0;
@@ -163,7 +165,7 @@ public class Player {
 		onGround = false;
 	}
 
-	//TODO: This isn't being called right now.  Once this is reinstated, this method needs to move
+	//TODO: This isn't being called right now.  Once this is reinstated, (this method needs to move?)
 	public boolean canCreate(CreationSlot slot) {
 		try {
 

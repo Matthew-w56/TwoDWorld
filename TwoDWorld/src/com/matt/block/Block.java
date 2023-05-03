@@ -5,13 +5,6 @@ import java.awt.Rectangle;
 import com.matt.O;
 import com.matt.item.Item;
 
-/* Hacksaw Notes:
- * Changed durability to public temporarily to allow
- * displaying everything in the old way to work, since
- * ChunkManager needed to see it.  TODO: Change this back when
- * possible
- */
-
 /**
  * The world is made of blocks, which have a material, associated item,
  * and a few other characteristics.  These are the base level for the

@@ -37,9 +37,9 @@ public class WorldManager {
 		System.out.println("[World Manager] Generating World");
 		world.generate();
 
-		for (Chunk chunk: world.chunkListMiddle) {
+		for (Integer index: world.activeChunkIndices) {
 			//Initiate the chunk's blocks
-			chunk.initBlocks();
+			world.chunkList.get(index).initBlocks();
 		}
 	}
 
@@ -98,7 +98,7 @@ public class WorldManager {
 	 * @param e Entity to remove (delete)
 	 */
 	protected void removeEntity(Entity e) {
-		world.middleEntities.remove(e);
+		world.activeEntities.remove(e);
 	}
 
 	protected void gameLoop() {
@@ -173,7 +173,7 @@ public class WorldManager {
 		Block block = world.getBlock(x, y);
 		Item holding = world.player.getSelectedItem();
 		
-		for (Entity e: world.middleEntities) {
+		for (Entity e: world.activeEntities) {
 			if (e.getModel().hit_box.get(0).rect.intersects(block.rect)) {
 				//This being run means that the block being placed would collide
 				//with an entity of the world.  So this cancels that.
