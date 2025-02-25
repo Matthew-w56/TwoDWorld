@@ -11,6 +11,11 @@ with a few major interesting aspects (especially for an un-trained highschool st
    - Unhappy with the jarring results of trying to overlay JavaFX or Swing, I built my own UI framework, including the defining, drawing, and creation of menus
    - Allows buttons to have results when clicked, which powered the in-game menus (see screenshots below)
    - Managed game state in stasis while menus were active
+- Entities
+   - The world starts up with one cow and one pig
+   - I built an entire heirarchy of entity types and interfaces that allow the creation of a variety of entity types (animals, etc)
+   - They wander the world, randomly deciding to pause or to walk in a direction towards some point
+   - They jump when they need to get over something, and stop jumping when they can't get up to where they want
  
 # Notable Classes
 
